@@ -3,10 +3,10 @@ import { type NextPage } from "next";
 import Head from "next/head";
 // import Link from "next/link";
 
-// import { api } from "~/utils/api";
+import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data } = api.posts.getAll.useQuery();
   const user = useUser();
 
   return (
@@ -22,6 +22,15 @@ const Home: NextPage = () => {
           {!!user.isSignedIn && <SignOutButton />}
         </div>
         <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
+        <div>
+          {data?.map((item) => {
+            return (
+              <>
+                <div key={item.id}>{item.content}</div>
+              </>
+            );
+          })}
+        </div>
       </main>
     </>
   );
