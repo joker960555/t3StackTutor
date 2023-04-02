@@ -1,58 +1,32 @@
-import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import type { User } from "@clerk/nextjs/dist/api";
+// import {
+//   type Dispatch,
+//   type FormEvent,
+//   type SetStateAction,
+//   useState,
+//   useCallback,
+// } from "react";
 import { type NextPage } from "next";
-import Head from "next/head";
-// import Link from "next/link";
+import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
-
-import { api, type RouterOutputs } from "~/utils/api";
-
-import { LoadingPage } from "~/components/loading";
-
+// import { z, type ZodObject } from "zod";
+// import { useForm, SubmitHandler } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
+import Head from "next/head";
+// import Link from "next/link";
+import { api, type RouterOutputs } from "~/utils/api";
+import { LoadingPage } from "~/components/loading";
+// import { type AppRouter } from "~/server/api/root";
+import { PostForm } from "~/components/createPostForm/CreatePostForm";
 
-const CrearePostWizard = () => {
-  const { user } = useUser();
-  if (!user || !user.username) {
-    return <div />;
-  }
-  return (
-    <div className="flex flex-col border-b border-gray-600 py-3 px-4">
-      <div className="flex justify-between gap-4">
-        <Image
-          src={user.profileImageUrl}
-          alt={`${user.username} Profile Image`}
-          width={48}
-          height={48}
-          className="h-12 w-12 rounded-full object-cover "
-        />
-        <input
-          className="grow bg-black py-4 outline-none"
-          placeholder="What is happening?"
-          type="text"
-        />
-      </div>
-      <div className="flex items-center justify-between">
-        <div
-          className="flex gap-4
-              "
-        >
-          <div className="w-12" />
-          <span className="">🫠🫠🫠🫠🫠</span>
-        </div>
-        <button className=" rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600">
-          Tweet
-        </button>
-      </div>
-    </div>
-  );
-};
+dayjs.extend(relativeTime);
+// const postContentSchema = z.object({ content: z.string().min(1).max(255) });
 
 type postWithUserType = RouterOutputs["posts"]["getAll"][number];
 const CreatePostView = (props: postWithUserType) => {
   const { username, id, profileImageUrl, createdAt, content, authorId } = props;
+
   return (
     <div className="flex items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm">
       <Image
@@ -102,7 +76,7 @@ const Feed = () => {
 const Home: NextPage = () => {
   const { user, isSignedIn, isLoaded: userLoaded } = useUser();
   api.posts.getAll.useQuery();
-  if (!userLoaded || !user) {
+  if (!userLoaded) {
     return <div />;
   }
 
@@ -119,8 +93,9 @@ const Home: NextPage = () => {
           {!!isSignedIn && <SignOutButton />}
         </div>
 
-        <div className="mx-auto flex w-1/2 flex-col border-x border-t border-gray-600">
-          <CrearePostWizard />
+        <div className="mx-auto flex w-full flex-col border-x border-t border-gray-600 sm:w-1/2">
+          {/* <CrearePostWizard /> */}
+          <PostForm />
           <Feed />
         </div>
         <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
@@ -130,3 +105,56 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+// const CrearePostWizard = () => {
+//   const { user, isSignedIn } = useUser();
+//   const onValid = useCallback((data: unknown) => {
+//     console.log(data);
+//   }, []);
+//   const {
+//     register,
+//     handleSubmit,
+//     formState: { errors },
+//   } = useForm({
+//     resolver: zodResolver(postContentSchema),
+//   });
+//   if (!user || !user.username || !isSignedIn) {
+//     return <div />;
+//   }
+//   return (
+//     <div className="flex flex-col border-b border-gray-600 py-3 px-4">
+//       <form onSubmit={handleSubmit(onValid)}>
+//         <div className="flex justify-between gap-4">
+//           <Image
+//             src={user.profileImageUrl}
+//             alt={`${user.username} Profile Image`}
+//             width={48}
+//             height={48}
+//             className="h-12 w-12 rounded-full object-cover "
+//           />
+//           <input
+//             className="grow bg-black py-4 outline-none"
+//             {...register("content")}
+//             placeholder="What is happening?"
+//             type="text"
+//           />
+//         </div>
+//         <div className="flex items-center justify-between">
+//           <div
+//             className="flex gap-4
+//               "
+//           >
+//             <div className="w-12" />
+//             <span className="">🫠🫠🫠🫠🫠</span>
+//           </div>
+//           <button
+//             type="submit"
+//             className=" rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600"
+//           >
+//             Tweet
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// };

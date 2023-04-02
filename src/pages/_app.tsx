@@ -2,12 +2,18 @@ import { type AppType } from "next/app";
 
 import { api } from "~/utils/api";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "react-hot-toast";
 
 import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
+      <Toaster
+        containerClassName=" text-sm"
+        position="bottom-center"
+        toastOptions={{ duration: 4000 }}
+      />
       <Component {...pageProps} />
     </ClerkProvider>
   );
