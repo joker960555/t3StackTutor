@@ -23,7 +23,7 @@ const CreatePostView = (props: postWithUserType) => {
   return (
     <div className="flex items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm">
       <div className="self-start justify-self-start ">
-        <Link href={`${authorId}`} className="block h-12 w-12 ">
+        <Link href={`${username}`} className="block h-12 w-12 ">
           <Image
             src={profileImageUrl}
             alt={`${username}'s profile image`}
@@ -35,17 +35,17 @@ const CreatePostView = (props: postWithUserType) => {
       </div>
       <div className="flex flex-col gap-1">
         <div className="flex gap-1">
-          <Link href={`${authorId}`}>
+          <Link href={`${username}`}>
             <span className=" font-medium">{username}</span>
           </Link>
-          <Link className="flex gap-1" href={`${authorId}/status/${id}`}>
+          <Link className="flex gap-1" href={`${username}/status/${id}`}>
             <span className=" font-normal text-gray-500">·</span>
             <span className=" font-normal text-gray-500 hover:underline hover:decoration-1">
               {dayjs(createdAt).fromNow()}
             </span>
           </Link>
         </div>
-        <Link href={`${authorId}/status/${id}`}>
+        <Link href={`${username}/status/${id}`}>
           <div>
             🫠🫠🫠🫠🫠{content}Lorem ipsum dolor sit amet consectetur, adipisicing
             elit. Quasi dignissimos nisi veritatis odio saepe doloribus
