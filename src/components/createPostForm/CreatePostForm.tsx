@@ -1,14 +1,8 @@
-import {
-  ChangeEvent,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
@@ -92,13 +86,15 @@ export const PostForm = () => {
         )}
       >
         <div className="flex h-fit justify-between gap-4">
-          <Image
-            src={user.profileImageUrl}
-            alt={`${user.username} Profile Image`}
-            width={48}
-            height={48}
-            className="h-12 w-12 rounded-full object-cover "
-          />
+          <Link href={`wer`}>
+            <Image
+              src={user.profileImageUrl}
+              alt={`${user.username} Profile Image`}
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-full object-cover transition-all hover:opacity-70 "
+            />
+          </Link>
 
           <textarea
             className=" grow resize-none overflow-y-hidden whitespace-pre-wrap bg-black py-4 outline-none"

@@ -1,20 +1,13 @@
-// import {
-//   type Dispatch,
-//   type FormEvent,
-//   type SetStateAction,
-//   useState,
-//   useCallback,
-// } from "react";
 import { type NextPage } from "next";
 import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 // import { z, type ZodObject } from "zod";
 // import { useForm, SubmitHandler } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Head from "next/head";
-// import Link from "next/link";
 import { api, type RouterOutputs } from "~/utils/api";
 import { LoadingPage } from "~/components/loading";
 // import { type AppRouter } from "~/server/api/root";
@@ -29,27 +22,37 @@ const CreatePostView = (props: postWithUserType) => {
 
   return (
     <div className="flex items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm">
-      <Image
-        src={profileImageUrl}
-        alt={`${username}'s profile image`}
-        width={48}
-        height={48}
-        className="h-12 w-12 self-start justify-self-start rounded-full object-cover "
-      />
+      <div className="self-start justify-self-start ">
+        <Link href={`${authorId}`} className="block h-12 w-12 ">
+          <Image
+            src={profileImageUrl}
+            alt={`${username}'s profile image`}
+            width={48}
+            height={48}
+            className="rounded-full object-cover transition-all hover:opacity-70"
+          />
+        </Link>
+      </div>
       <div className="flex flex-col gap-1">
         <div className="flex gap-1">
-          <span className=" font-medium">{username}</span>
-          <span className=" font-normal text-gray-500">·</span>
-          <span className=" font-normal text-gray-500">
-            {dayjs(createdAt).fromNow()}
-          </span>
+          <Link href={`${authorId}`}>
+            <span className=" font-medium">{username}</span>
+          </Link>
+          <Link className="flex gap-1" href={`${authorId}/status/${id}`}>
+            <span className=" font-normal text-gray-500">·</span>
+            <span className=" font-normal text-gray-500 hover:underline hover:decoration-1">
+              {dayjs(createdAt).fromNow()}
+            </span>
+          </Link>
         </div>
-        <div>
-          🫠🫠🫠🫠🫠{content}Lorem ipsum dolor sit amet consectetur, adipisicing
-          elit. Quasi dignissimos nisi veritatis odio saepe doloribus similique
-          dolor obcaecati vel quae, quibusdam earum, exercitationem cumque nobis
-          illo provident praesentium at! Hic.
-        </div>
+        <Link href={`${authorId}/status/${id}`}>
+          <div>
+            🫠🫠🫠🫠🫠{content}Lorem ipsum dolor sit amet consectetur, adipisicing
+            elit. Quasi dignissimos nisi veritatis odio saepe doloribus
+            similique dolor obcaecati vel quae, quibusdam earum, exercitationem
+            cumque nobis illo provident praesentium at! Hic.
+          </div>
+        </Link>
       </div>
     </div>
   );
@@ -105,56 +108,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-// const CrearePostWizard = () => {
-//   const { user, isSignedIn } = useUser();
-//   const onValid = useCallback((data: unknown) => {
-//     console.log(data);
-//   }, []);
-//   const {
-//     register,
-//     handleSubmit,
-//     formState: { errors },
-//   } = useForm({
-//     resolver: zodResolver(postContentSchema),
-//   });
-//   if (!user || !user.username || !isSignedIn) {
-//     return <div />;
-//   }
-//   return (
-//     <div className="flex flex-col border-b border-gray-600 py-3 px-4">
-//       <form onSubmit={handleSubmit(onValid)}>
-//         <div className="flex justify-between gap-4">
-//           <Image
-//             src={user.profileImageUrl}
-//             alt={`${user.username} Profile Image`}
-//             width={48}
-//             height={48}
-//             className="h-12 w-12 rounded-full object-cover "
-//           />
-//           <input
-//             className="grow bg-black py-4 outline-none"
-//             {...register("content")}
-//             placeholder="What is happening?"
-//             type="text"
-//           />
-//         </div>
-//         <div className="flex items-center justify-between">
-//           <div
-//             className="flex gap-4
-//               "
-//           >
-//             <div className="w-12" />
-//             <span className="">🫠🫠🫠🫠🫠</span>
-//           </div>
-//           <button
-//             type="submit"
-//             className=" rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600"
-//           >
-//             Tweet
-//           </button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
