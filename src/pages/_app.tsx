@@ -4,6 +4,7 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
+import { MainLayout } from "~/components/mainLayout/MainLayout";
 
 import "~/styles/globals.css";
 
@@ -20,7 +21,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         position="bottom-center"
         toastOptions={{ duration: 4000 }}
       />
-      <Component {...pageProps} />
+      <MainLayout>
+        <Component {...pageProps} />
+      </MainLayout>
+      {/* <Component {...pageProps} /> */}
     </ClerkProvider>
   );
 };
