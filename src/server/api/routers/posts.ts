@@ -1,6 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/server";
-import type { User } from "@clerk/nextjs/dist/api";
 import { z } from "zod";
+import { filterUserForClient } from "~/server/api/helpers/filterUserForClient";
 
 import {
   createTRPCRouter,
@@ -9,10 +9,10 @@ import {
 } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 
-const filterUserForClient = (user: User) => {
-  const { id, profileImageUrl, username } = user;
-  return { authorId: id, profileImageUrl, username };
-};
+// const filterUserForClient = (user: User) => {
+//   const { id, profileImageUrl, username } = user;
+//   return { authorId: id, profileImageUrl, username };
+// };
 
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";
@@ -48,13 +48,13 @@ export const postsRouter = createTRPCRouter({
         return user.authorId === post.authorId;
       });
 
-      if (!userWithPost || typeof userWithPost.username !== "string") {
+      if (!userWithPost) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "User not found",
         });
       } else {
-        return { ...post, ...userWithPost, username: userWithPost.username };
+        return { ...post, ...userWithPost };
       }
     });
     return postsWithUsers;
