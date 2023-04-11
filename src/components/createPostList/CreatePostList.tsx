@@ -20,17 +20,16 @@ export const CreatePostList = (props: userTypeWithPosts) => {
         initialCursor: initialCursor,
       }
     );
-  const onIntersection = (entries: IntersectionObserverEntry[]) => {
-    const firstEntry = entries[0];
-    if (firstEntry && firstEntry.isIntersecting) {
-      console.log("IS");
-    }
-    if (firstEntry?.isIntersecting && hasNextPage) {
-      handeNextPage();
-    }
-  };
   useEffect(() => {
-    const observer = new IntersectionObserver(onIntersection);
+    const observer = new IntersectionObserver((entries) => {
+      const firstEntry = entries[0];
+      if (firstEntry && firstEntry.isIntersecting) {
+        console.log("IS");
+      }
+      if (firstEntry?.isIntersecting && hasNextPage) {
+        handeNextPage();
+      }
+    });
     if (observer && elemRef.current) {
       observer.observe(elemRef.current);
     }

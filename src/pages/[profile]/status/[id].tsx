@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
 import { api } from "~/utils/api";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
@@ -10,7 +9,7 @@ import { CreatePostView } from "~/components/createPostView/CreatePostView";
 const PostPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = api.posts.getUniquePostById.useQuery({ id });
   if (!data) return <div />;
-  const { username, authorId, content, profileImageUrl, createdAt } = data;
+  const { username, content } = data;
   console.log("somth work", data);
   const headerTitle =
     content.length > 5 ? `${content.slice(0, 4)}...` : content;
