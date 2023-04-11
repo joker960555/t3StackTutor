@@ -15,7 +15,6 @@ const postContentSchema = z.object({
     .min(1, { message: "Post must contain at least 1 character(s)" })
     .max(255),
 });
-
 export const PostForm = () => {
   const [value, setValue] = useState("");
   const [height, setHeight] = useState("auto");
@@ -30,13 +29,11 @@ export const PostForm = () => {
   }, [value]);
 
   const { user, isSignedIn } = useUser();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof postContentSchema>>({
-    resolver: zodResolver(postContentSchema),
-  });
+  const { register, handleSubmit } = useForm<z.infer<typeof postContentSchema>>(
+    {
+      resolver: zodResolver(postContentSchema),
+    }
+  );
   const { mutate: createPostReq, isLoading: isPosting } =
     api.posts.create.useMutation({
       onSuccess: () => {

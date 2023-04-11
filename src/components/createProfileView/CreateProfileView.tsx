@@ -1,15 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type RouterOutputs } from "~/utils/api";
-import { CreatePostView } from "~/components/createPostView/CreatePostView";
+import { CreatePostList } from "~/components/createPostList/CreatePostList";
 
-type postWithUserType = RouterOutputs["profile"]["getProfileByUserName"];
-export const CreateProfileView = (props: { data: postWithUserType }) => {
+type userTypeWithPosts = RouterOutputs["profile"]["getProfileByUserName"];
+export const CreateProfileView = (props: { data: userTypeWithPosts }) => {
   const { data } = props;
-  const { authorId, profileImageUrl, username } = data.filteredUser;
-  const postWithUser = data.userPosts.map((post) => {
-    return { ...post, authorId, profileImageUrl, username };
-  });
+
+  if (!data) {
+    return <div />;
+  }
+  const { profileImageUrl, username } = data.filteredUser;
   return (
     <>
       <header className=" flex cursor-pointer items-center gap-x-8 px-2 py-1">
@@ -36,11 +37,14 @@ export const CreateProfileView = (props: { data: postWithUserType }) => {
         <div className="h-24"></div>
         <span className="text-lg font-semibold leading-6">{username}</span>
       </section>
-      <section className="border-t border-gray-600">
-        {postWithUser.map((post) => {
-          return <CreatePostView {...post} key={post.id} />;
+      {/* <section className="border-t border-gray-600">xw
+        {props.data.userPosts.map((post) => {
+          return (
+            <CreatePostView {...post} {...data.filteredUser} key={post.id} />
+          );
         })}
-      </section>
+      </section> */}
+      <CreatePostList {...data} />
     </>
   );
 };

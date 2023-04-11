@@ -3,6 +3,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { filterUserForClient } from "~/server/api/helpers/filterUserForClient";
+import { createInitialCursor } from "~/server/api/helpers/createInitialCursor";
 
 export const profileRouter = createTRPCRouter({
   getProfileByUserName: publicProcedure
@@ -20,9 +21,11 @@ export const profileRouter = createTRPCRouter({
       const filteredUser = filterUserForClient(user);
       const userPosts = await ctx.prisma.post.findMany({
         where: { authorId: { contains: filteredUser.authorId } },
-        take: 10,
+        take: 11,
         orderBy: [{ createdAt: "desc" }],
       });
-      return { filteredUser, userPosts };
+      const initialCursor = createInitialCursor(userPosts); // removes last post from userPosts
+      console.log(userPosts.length);
+      return { filteredUser, userPosts, initialCursor };
     }),
 });

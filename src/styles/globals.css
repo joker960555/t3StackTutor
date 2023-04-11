@@ -8,6 +8,7 @@
 
 body {
   @apply m-0 bg-black text-slate-100;
+  overscroll-behavior: none;
 }
 html {
   scrollbar-gutter: stable both-edges;
