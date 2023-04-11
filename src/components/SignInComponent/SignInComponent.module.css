@@ -1,0 +1,11 @@
+.hidden {
+  @apply -translate-x-1/4;
+}
+
+.active {
+  @apply -translate-x-full;
+}
+
+.active .arrow {
+  @apply rotate-180;
+}

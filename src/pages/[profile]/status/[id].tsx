@@ -10,7 +10,6 @@ const PostPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = api.posts.getUniquePostById.useQuery({ id });
   if (!data) return <div />;
   const { username, content } = data;
-  console.log("somth work", data);
   const headerTitle =
     content.length > 5 ? `${content.slice(0, 4)}...` : content;
   return (

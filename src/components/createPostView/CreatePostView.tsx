@@ -3,22 +3,14 @@ import Image from "next/image";
 import { type RouterOutputs } from "~/utils/api";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-// import { forwardRef } from "react";
 dayjs.extend(relativeTime);
 type userWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
 
-// forwardRef<HTMLDivElement, userWithPostType>;
 export const CreatePostView = (props: userWithPostType) => {
-  // if (!ref) {
-  //   return <div />;
-  // }
   const { username, profileImageUrl, id, content, createdAt } = props;
 
   return (
-    <div
-      // data-item={id}
-      className="flex items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm"
-    >
+    <div className="flex items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm">
       <div className="self-start justify-self-start ">
         <Link href={`/${username}`} className="block h-12 w-12 ">
           <Image
@@ -46,9 +38,6 @@ export const CreatePostView = (props: userWithPostType) => {
             </span>
           </Link>
         </div>
-        {/* <Link
-          href={{ pathname: `[username]/status/[id]`, query: { username, id } }}
-        > */}
         <Link href={`/${username}/status/${id}`} replace={true}>
           <div>{content}</div>
         </Link>
@@ -56,5 +45,3 @@ export const CreatePostView = (props: userWithPostType) => {
     </div>
   );
 };
-
-// CreatePostView.displayName = "CreatePostView";

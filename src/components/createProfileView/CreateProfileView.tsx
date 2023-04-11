@@ -37,13 +37,6 @@ export const CreateProfileView = (props: { data: userTypeWithPosts }) => {
         <div className="h-24"></div>
         <span className="text-lg font-semibold leading-6">{username}</span>
       </section>
-      {/* <section className="border-t border-gray-600">xw
-        {props.data.userPosts.map((post) => {
-          return (
-            <CreatePostView {...post} {...data.filteredUser} key={post.id} />
-          );
-        })}
-      </section> */}
       <CreatePostList {...data} />
     </>
   );

@@ -6,31 +6,9 @@ export type ProfilePageType = InferGetStaticPropsType<typeof getStaticProps>;
 const ProfilePage = ({
   username,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { data: prefetchData, isLoading } =
-    api.profile.getProfileByUserName.useQuery({
-      username,
-    });
-  // const fetchMorePosts = (authorId: string, skipCount: number) => {
-  //   const { data: posts } = api.posts.getPostsByUserId.useQuery({
-  //     authorId,
-  //     skipCount,
-  //   });
-  //   if (!posts)
-  //     throw new TRPCError({ code: "NOT_FOUND", message: "no more posts" });
-  //   console.log(posts);
-  // };
-  // useEffect(() => {
-  // if (prefetchData) {
-  //   const { data: posts } = api.posts.getPostsByUserId.useQuery({
-  //     authorId: prefetchData?.filteredUser.authorId,
-  //     skipCount: skipCountPosts,
-  //   });
-  //   if (!posts)
-  //     throw new TRPCError({ code: "NOT_FOUND", message: "no more posts" });
-  //   console.log(posts);
-  // }
-  // }, [skipCountPosts]);
-  if (isLoading) console.log("loading");
+  const { data: prefetchData } = api.profile.getProfileByUserName.useQuery({
+    username,
+  });
   if (!prefetchData) return <div />;
 
   return (
@@ -38,6 +16,7 @@ const ProfilePage = ({
       <Head>
         <title>{username} Profile / Letters</title>
       </Head>
+
       <CreateProfileView data={prefetchData} />
     </>
   );
