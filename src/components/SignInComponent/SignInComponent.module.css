@@ -1,5 +1,5 @@
 .signIn {
-  @apply absolute top-0 right-0 flex h-10 w-24 translate-x-2/3 transition-all;
+  @apply absolute top-1 right-0 flex h-10 w-24 translate-x-2/3 transition-all;
 }
 
 .signIn.active {
@@ -7,7 +7,7 @@
 }
 
 .arrow {
-  @apply transition-all;
+  @apply cursor-pointer transition-all hover:scale-105 active:scale-100;
 }
 
 .active .arrow {

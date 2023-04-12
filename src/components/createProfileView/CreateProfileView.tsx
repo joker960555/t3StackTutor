@@ -25,13 +25,15 @@ export const CreateProfileView = (props: { data: userTypeWithPosts }) => {
         </div>
       </header>
       <section className=" relative block h-48 bg-gradient-to-r from-yellow-400 to-blue-800 ">
-        <Image
-          src={profileImageUrl}
-          alt={`${username}'s profile image`}
-          height={200}
-          width={200}
-          className="absolute left-5 top-full h-32 w-32 -translate-y-1/2 rounded-full outline outline-4 outline-black  "
-        ></Image>
+        <div className="rounded-full">
+          <Image
+            src={profileImageUrl}
+            alt={`${username}'s profile image`}
+            height={200}
+            width={200}
+            className="absolute left-5 top-full h-36 w-36 -translate-y-1/2 rounded-full border-4 border-black  "
+          ></Image>
+        </div>
       </section>
       <section className="px-5">
         <div className="h-24"></div>
