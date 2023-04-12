@@ -1,9 +1,13 @@
-.hidden {
-  @apply -translate-x-1/4;
+.signIn {
+  @apply absolute top-0 right-0 flex h-10 w-24 translate-x-2/3 transition-all;
 }
 
-.active {
-  @apply -translate-x-full;
+.signIn.active {
+  @apply translate-x-0;
+}
+
+.arrow {
+  @apply transition-all;
 }
 
 .active .arrow {

@@ -5,7 +5,7 @@ import { SignInComponent } from "~/components/SignInComponent/SignInComponent";
 export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
-      <main className="w-full">
+      <main className="relative w-full overflow-hidden">
         <SignInComponent />
         <div className=" mx-auto flex h-full min-h-screen w-full flex-col border-x border-gray-600 sm:w-1/2">
           {children}
