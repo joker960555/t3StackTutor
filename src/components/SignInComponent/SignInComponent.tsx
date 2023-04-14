@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import styles from "./SignInComponent.module.css";
 import cn from "classnames";
 
@@ -27,6 +27,7 @@ export const SignInComponent = () => {
         {!isSignedIn && <SignInButton mode="modal" />}
         {!!isSignedIn && <SignOutButton />}
       </div>
+      <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
     </div>
   );
 };

@@ -41,12 +41,6 @@ export const PostForm = () => {
         setValue("");
       },
       onError: (e) => {
-        //   setError("root", {
-        //     type: e.message,
-        //     message: "You exceeded the limit of 1 post per 10 seconds",
-        //   });
-        //   console.log("hi", e.data?.zodError?.fieldErrors.content);
-        //   toast.error("You exceeded the limit of 1 post per 10 seconds");
         if (e.data?.code === "TOO_MANY_REQUESTS") {
           toast.error(e.message);
           return;
@@ -64,9 +58,10 @@ export const PostForm = () => {
     },
     [createPostReq]
   );
-
+  console.log(user, user?.username, isSignedIn);
   if (!user || !user.username || !isSignedIn) {
-    return <div />;
+    console.log(user, isSignedIn);
+    return <div>NOT A USER</div>;
   }
   return (
     <div className="flex flex-col border-b border-gray-600 py-3 px-4">
