@@ -23,19 +23,9 @@ export const bindUserDataToPosts = async (posts: Post[]) => {
         message: `User not found. POST ID: ${post.id}, USER ID: ${post.authorId}`,
       });
     }
-    if (!userWithPost.username) {
-      if (!userWithPost.externalUsername) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Author has no Github or Google account: ${userWithPost.authorId}`,
-        });
-      }
-      userWithPost.username = userWithPost.externalUsername;
-    }
     return {
       ...post,
       ...userWithPost,
-      username: userWithPost.username ?? "(username not found)",
     };
   });
   return postsWithUsers;

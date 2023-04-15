@@ -13,11 +13,31 @@ export const profileRouter = createTRPCRouter({
       const [user] = await clerkClient.users.getUserList({
         username: [input.username],
       });
-      if (!user)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: errorMessage,
+      if (!user) {
+        const users = await clerkClient.users.getUserList({ limit: 200 });
+        const user = users.find((user) =>
+          user.externalAccounts.find(
+            (account) => account.username === input.username
+          )
+        );
+        if (!user) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: errorMessage,
+          });
+        }
+
+        const filteredUser = filterUserForClient(user);
+
+        const userPosts = await ctx.prisma.post.findMany({
+          where: { authorId: { contains: filteredUser.authorId } },
+          take: 11,
+          orderBy: [{ createdAt: "desc" }],
         });
+        const initialCursor = createInitialCursor(userPosts); // removes last post from userPosts
+        return { filteredUser, userPosts, initialCursor };
+      }
+
       const filteredUser = filterUserForClient(user);
       const userPosts = await ctx.prisma.post.findMany({
         where: { authorId: { contains: filteredUser.authorId } },
@@ -25,7 +45,6 @@ export const profileRouter = createTRPCRouter({
         orderBy: [{ createdAt: "desc" }],
       });
       const initialCursor = createInitialCursor(userPosts); // removes last post from userPosts
-      console.log(userPosts.length);
       return { filteredUser, userPosts, initialCursor };
     }),
 });
