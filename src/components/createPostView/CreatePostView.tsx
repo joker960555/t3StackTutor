@@ -12,7 +12,7 @@ import { PostOptionsMenu } from "../postOptionsMenu/PostOptionsMenu";
 
 export const CreatePostView = (
   props: userWithPostType & {
-    setFlagToRefetch: Dispatch<SetStateAction<boolean>>;
+    setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
   }
 ) => {
   const {

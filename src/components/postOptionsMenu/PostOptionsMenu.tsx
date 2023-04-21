@@ -13,7 +13,7 @@ export const PostOptionsMenu = ({
 }: {
   direction: "toTop" | "toBottom";
   userWithPostData: userWithPostType;
-  setFlagToRefetch: Dispatch<SetStateAction<boolean>>;
+  setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { id, authorId, username } = userWithPostData;
   const ctx = api.useContext();
@@ -23,7 +23,7 @@ export const PostOptionsMenu = ({
     onSuccess: () => {
       switch (lastPartOfCurrentURL) {
         case username:
-          setFlagToRefetch(true); // onDelete refetch useInfiniteQuery posts
+          if (setFlagToRefetch) setFlagToRefetch(true); // onDelete refetch useInfiniteQuery posts
           break;
 
         default:
