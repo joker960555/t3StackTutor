@@ -107,7 +107,19 @@ export const postsRouter = createTRPCRouter({
       if (posts.length > limit) {
         const nextItem = posts.pop();
         nextCursor = nextItem?.id;
-        return { posts, nextCursor };
       }
+      return { posts, nextCursor };
+    }),
+  removeUniquePostById: privateProcedure
+    .input(z.object({ id: z.string(), authorId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, authorId } = input;
+      if (authorId !== ctx.userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not the author of this post",
+        });
+      }
+      await ctx.prisma.post.delete({ where: { id } });
     }),
 });

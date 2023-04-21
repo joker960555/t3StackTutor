@@ -1,32 +1,47 @@
 import { useState, useRef, useEffect } from "react";
 import { api, type RouterOutputs } from "~/utils/api";
 import { CreatePostView } from "~/components/createPostView/CreatePostView";
+import type { Post } from "@prisma/client";
 
-type userTypeWithPosts = RouterOutputs["profile"]["getProfileByUserName"];
-export const CreatePostList = (props: userTypeWithPosts) => {
-  const { userPosts, filteredUser, initialCursor } = props;
+type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
+export const CreatePostList = (props: userProfileType) => {
+  const { username, profileImageUrl, authorId } = props;
+  const limit = 10;
   const [page, setPage] = useState(0);
-  const [infiniteData, setInfiniteData] = useState([...userPosts]);
+  const [flagToRefetch, setFlagToRefetch] = useState<boolean>(false);
   const elemRef = useRef(null);
-
-  const { data, isFetched, fetchNextPage, hasNextPage } =
+  const { data, hasNextPage, fetchNextPage, isFetched, refetch } =
     api.posts.getInfinitePostsByUserId.useInfiniteQuery(
       {
-        authorId: filteredUser.authorId,
-        limit: 10,
+        authorId,
+        limit,
       },
-      {
-        getNextPageParam: (lastPage) => lastPage?.nextCursor,
-        initialCursor: initialCursor,
-      }
+      { getNextPageParam: (lastPage) => lastPage?.nextCursor }
     );
+  const [infiniteData, setInfiniteData] = useState<[] | Post[]>([]);
+  useEffect(() => {
+    if (flagToRefetch === true) {
+      void ctx.posts.getInfinitePostsByUserId.invalidate();
+      setFlagToRefetch(false); // onDelete refetch useInfiniteQuery posts
+      void refetch().then((resp) => {
+        if (resp.isSuccess) {
+          setInfiniteData(() => resp.data.pages.flatMap((page) => page.posts));
+        }
+      });
+    }
+  }, [flagToRefetch]);
+  useEffect(() => {
+    if (data && data.pages && data.pages[0] && page === 0) {
+      setInfiniteData(data.pages[0].posts);
+      setPage((page) => page + 1);
+    }
+  }, [data]);
+  const ctx = api.useContext();
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const firstEntry = entries[0];
-      if (firstEntry && firstEntry.isIntersecting) {
-        console.log("IS");
-      }
-      if (firstEntry?.isIntersecting && hasNextPage) {
+
+      if (firstEntry?.isIntersecting && hasNextPage && page !== 0) {
         handeNextPage();
       }
     });
@@ -40,11 +55,10 @@ export const CreatePostList = (props: userTypeWithPosts) => {
     };
   }, [page, isFetched]);
   const handeNextPage = () => {
-    const fetchedData = data?.pages[page]?.posts;
-    console.log("SUKA JA ZDES", fetchedData, page);
+    let fetchedData: Post[] | undefined = undefined;
     void fetchNextPage()
-      .then(() => {
-        console.log("WTF", fetchedData);
+      .then((resp) => {
+        if (resp.isSuccess) fetchedData = resp.data.pages[page]?.posts;
         if (fetchedData) {
           setPage((page) => page + 1);
         }
@@ -54,7 +68,6 @@ export const CreatePostList = (props: userTypeWithPosts) => {
           if (fetchedData) {
             return [...prevData, ...fetchedData];
           } else {
-            console.log("SO WHATS HERE", fetchedData);
             return [...prevData];
           }
         })
@@ -64,18 +77,20 @@ export const CreatePostList = (props: userTypeWithPosts) => {
   return (
     <>
       <section id="scrollArea" className="border-t border-gray-600">
-        {infiniteData.map((post) => {
-          return <CreatePostView {...post} {...filteredUser} key={post.id} />;
-        })}
+        {infiniteData.length > 0 &&
+          infiniteData.map((post) => {
+            return (
+              <CreatePostView
+                {...post}
+                {...props}
+                setFlagToRefetch={setFlagToRefetch}
+                key={post.id}
+              />
+            );
+          })}
       </section>
       {hasNextPage && (
-        <button
-          ref={elemRef}
-          onClick={handeNextPage}
-          className="mx-auto h-9 justify-self-center rounded-lg bg-slate-600 px-4 transition-all hover:opacity-90 active:scale-95"
-        >
-          Load more posts
-        </button>
+        <div ref={elemRef} className="h-[1px] bg-transparent opacity-0"></div> // intersection trigger that fetches next page
       )}
     </>
   );

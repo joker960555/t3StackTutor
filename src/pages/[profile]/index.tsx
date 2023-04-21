@@ -6,10 +6,10 @@ export type ProfilePageType = InferGetStaticPropsType<typeof getStaticProps>;
 const ProfilePage = ({
   username,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { data: prefetchData } = api.profile.getProfileByUserName.useQuery({
+  const { data } = api.profile.getProfileByUserName.useQuery({
     username,
   });
-  if (!prefetchData) return <div />;
+  if (!data) return <div />;
 
   return (
     <>
@@ -17,7 +17,7 @@ const ProfilePage = ({
         <title>{username} Profile / Letters</title>
       </Head>
 
-      <CreateProfileView data={prefetchData} />
+      <CreateProfileView data={data} />
     </>
   );
 };

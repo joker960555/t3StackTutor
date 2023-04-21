@@ -3,14 +3,14 @@ import Link from "next/link";
 import { type RouterOutputs } from "~/utils/api";
 import { CreatePostList } from "~/components/createPostList/CreatePostList";
 
-type userTypeWithPosts = RouterOutputs["profile"]["getProfileByUserName"];
-export const CreateProfileView = (props: { data: userTypeWithPosts }) => {
+type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
+export const CreateProfileView = (props: { data: userProfileType }) => {
   const { data } = props;
 
   if (!data) {
     return <div />;
   }
-  const { profileImageUrl, username } = data.filteredUser;
+  const { profileImageUrl, username } = data;
   return (
     <>
       <header className=" flex cursor-pointer items-center gap-x-8 px-2 py-1">

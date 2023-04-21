@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-// import type { User } from "@clerk/nextjs/dist/server/clerk";
 import type { User } from "@clerk/nextjs/dist/api";
 
 export const findExternalAccountUsernameOrThrowError = (user: User) => {

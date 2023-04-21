@@ -37,10 +37,6 @@ const Home: NextPage = () => {
   return (
     <>
       <PostForm />
-      <SignedIn>HELLO</SignedIn>
-      <SignedOut>
-        <SignIn></SignIn>
-      </SignedOut>
       <Feed />
     </>
   );

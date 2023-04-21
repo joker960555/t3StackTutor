@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+// import Image from "next/image";
+// import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useUser } from "@clerk/nextjs";
+import { useUser, UserButton } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { CreateLoadingSpinner } from "../loading";
@@ -78,15 +78,11 @@ export const PostForm = () => {
         )}
       >
         <div className="flex h-fit justify-between gap-4">
-          <Link href={`wer`}>
-            <Image
-              src={user.profileImageUrl}
-              alt={`${user.username} Profile Image`}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-full object-cover transition-all hover:opacity-70 "
-            />
-          </Link>
+          <UserButton
+            appearance={{
+              elements: { userButtonAvatarBox: { width: 48, height: 48 } },
+            }}
+          />
 
           <textarea
             className=" grow resize-none overflow-y-hidden whitespace-pre-wrap bg-black py-4 outline-none"
