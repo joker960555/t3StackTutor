@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import { useUser, SignedIn, SignedOut, SignIn } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { api } from "~/utils/api";
@@ -28,7 +28,7 @@ const Feed = () => {
 };
 
 const Home: NextPage = () => {
-  const { user, isSignedIn, isLoaded: userLoaded } = useUser();
+  const { isLoaded: userLoaded } = useUser();
   api.posts.getAll.useQuery();
   if (!userLoaded) {
     return <div />;

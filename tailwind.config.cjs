@@ -7,8 +7,8 @@ const config = {
         5: "5px",
         6: "6px",
       },
-      dropShadow: {
-        "sm-all": "0 0 0.15rem #d1d5db", //dropshadow for OptionsMenu
+      boxShadow: {
+        equal: "0 0 3px 1px rgba(0, 0, 0, 0.1)", //boxShadow for OptionsMenu
       },
     },
   },

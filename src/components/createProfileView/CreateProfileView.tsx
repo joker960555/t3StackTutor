@@ -31,8 +31,8 @@ export const CreateProfileView = (props: { data: userProfileType }) => {
             alt={`${username}'s profile image`}
             height={200}
             width={200}
-            className="absolute left-5 top-full h-36 w-36 -translate-y-1/2 rounded-full border-4 border-black  "
-          ></Image>
+            className="absolute left-5 top-full h-36 w-36 -translate-y-1/2 rounded-full border-4 border-black object-cover  "
+          />
         </div>
       </section>
       <section className="px-5">

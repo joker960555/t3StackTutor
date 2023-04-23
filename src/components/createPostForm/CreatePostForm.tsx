@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-// import Image from "next/image";
-// import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -60,8 +58,7 @@ export const PostForm = () => {
   );
   console.log(user, user?.username, isSignedIn);
   if (!user || !user.username || !isSignedIn) {
-    console.log(user, isSignedIn);
-    return <div>NOT A USER</div>;
+    return <div />;
   }
   return (
     <div className="flex flex-col border-b border-gray-600 py-3 px-4">
@@ -72,7 +69,6 @@ export const PostForm = () => {
             onValid(data);
           },
           (e) => {
-            console.log(e);
             e.content?.message && toast.error(e.content.message);
           }
         )}

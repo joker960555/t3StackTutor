@@ -10,7 +10,6 @@ export const SignInComponent = () => {
     <div
       className={cn(styles.signIn, {
         [styles.active || ""]: active === true,
-        // [styles.hidden]: active === false,
       })}
       onClick={() => setActive((prev) => !prev)}
     >
@@ -31,15 +30,3 @@ export const SignInComponent = () => {
     </div>
   );
 };
-
-// .hidden {
-//   @apply bg-inherit;
-// }
-
-// .active {
-//   @apply bg-inherit;
-// }
-
-// .active .arrow {
-//   @apply rotate-180;
-// }

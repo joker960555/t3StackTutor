@@ -40,14 +40,14 @@ export const CreatePostView = (
   };
   return (
     <div className="flex items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm">
-      <div className="self-start justify-self-start ">
-        <Link href={`/${username}`} className="block h-12 w-12 ">
+      <div className="self-start justify-self-start">
+        <Link href={`/${username}`} className="block h-12 w-12 rounded-full ">
           <Image
             src={profileImageUrl}
             alt={`${username}'s profile image`}
-            width={48}
-            height={48}
-            className="rounded-full object-cover transition-all hover:opacity-70"
+            width={96}
+            height={96}
+            className="h-full w-full rounded-full object-cover transition-all hover:opacity-70"
           />
         </Link>
       </div>

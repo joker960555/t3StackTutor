@@ -34,13 +34,18 @@ export const CreatePostList = (props: userProfileType) => {
     if (data && data.pages && data.pages[0] && page === 0) {
       setInfiniteData(data.pages[0].posts);
       setPage((page) => page + 1);
+      if (!hasNextPage)
+        setInfiniteData(
+          data?.pages.flatMap((page) => {
+            return page.posts;
+          })
+        );
     }
-  }, [data]);
+  }, [data, hasNextPage]);
   const ctx = api.useContext();
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const firstEntry = entries[0];
-
       if (firstEntry?.isIntersecting && hasNextPage && page !== 0) {
         handeNextPage();
       }
