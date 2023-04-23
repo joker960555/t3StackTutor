@@ -10,13 +10,17 @@ export const CreatePostList = (props: userProfileType) => {
   const [page, setPage] = useState(0);
   const [flagToRefetch, setFlagToRefetch] = useState<boolean>(false);
   const elemRef = useRef(null);
-  const { data, hasNextPage, fetchNextPage, isFetched, refetch } =
+  const { data, hasNextPage, fetchNextPage, isFetched, refetch, isRefetching } =
     api.posts.getInfinitePostsByUserId.useInfiniteQuery(
       {
         authorId,
         limit,
       },
-      { getNextPageParam: (lastPage) => lastPage?.nextCursor }
+      {
+        getNextPageParam: (lastPage) => lastPage?.nextCursor,
+        refetchInterval: 5000,
+        refetchOnMount: true,
+      }
     );
   const [infiniteData, setInfiniteData] = useState<[] | Post[]>([]);
   useEffect(() => {
@@ -31,17 +35,26 @@ export const CreatePostList = (props: userProfileType) => {
     }
   }, [flagToRefetch]);
   useEffect(() => {
-    if (data && data.pages && data.pages[0] && page === 0) {
-      setInfiniteData(data.pages[0].posts);
-      setPage((page) => page + 1);
-      if (!hasNextPage)
+    if (data && data.pages && data.pages[0]) {
+      if (page === 0) {
+        setInfiniteData(data.pages[0].posts);
+        setPage((page) => page + 1);
+        if (!hasNextPage)
+          setInfiniteData(
+            data?.pages.flatMap((page) => {
+              return page.posts;
+            })
+          );
+      }
+      if (!isRefetching) {
         setInfiniteData(
           data?.pages.flatMap((page) => {
             return page.posts;
           })
         );
+      }
     }
-  }, [data, hasNextPage]);
+  }, [data, hasNextPage, isRefetching]);
   const ctx = api.useContext();
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
