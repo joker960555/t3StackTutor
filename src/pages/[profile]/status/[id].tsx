@@ -1,3 +1,4 @@
+import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { api, type RouterOutputs } from "~/utils/api";
@@ -7,13 +8,15 @@ dayjs.extend(relativeTime);
 import { CreatePostView } from "~/components/createPostView/CreatePostView";
 import { CommentForm } from "~/components/createCommentForm/CreateCommentForm";
 import { CreateReplyList } from "~/components/createReplyList/CreateReplyList";
+import { LoadingPage } from "~/components/loading";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
-const PostPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const PostPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
+  id,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = api.posts.getUniquePostById.useQuery({ id });
   if (!data) return <div />;
-  const { data: comments } = api.comments.getAll.useQuery({ postId: data.id });
-  console.log(comments);
+  // const { data: comments } = api.comments.getAll.useQuery({ postId: data.id });
   const { username, content, profileImageUrl, authorId } = data;
   const userData: userProfileType = { authorId, profileImageUrl, username };
   const postId = data.id;
@@ -37,13 +40,11 @@ const PostPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
           <span className="text-xs font-light text-gray-400 ">dude</span>
         </div>
       </header>
-      <div className="w-full border-b border-gray-600"></div>
+      <div className="w-full border-gray-600"></div>
       <CreatePostView {...data} />
-      <div>
-        <CommentForm postId={data.id} />
-        {/* LIST OF COMMENTS */}
-        <CreateReplyList {...userData} postId={postId} />{" "}
-      </div>
+      <CommentForm postId={data.id} />
+      {/* LIST OF COMMENTS */}
+      <CreateReplyList {...userData} postId={postId} />
     </>
   );
 };

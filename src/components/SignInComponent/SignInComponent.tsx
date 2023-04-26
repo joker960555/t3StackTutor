@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import styles from "./SignInComponent.module.css";
 import cn from "classnames";
@@ -27,6 +27,18 @@ export const SignInComponent = () => {
         {!!isSignedIn && <SignOutButton />}
       </div>
       <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
+    </div>
+  );
+};
+
+export const SignInPlate = ({ text }: { text: string }) => {
+  return (
+    <div className="mx-auto">
+      <SignInButton>
+        <button className="bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent transition-all hover:scale-105 active:scale-100">
+          {text}
+        </button>
+      </SignInButton>
     </div>
   );
 };

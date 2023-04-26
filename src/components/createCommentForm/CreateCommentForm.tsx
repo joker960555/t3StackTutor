@@ -6,6 +6,7 @@ import { useUser, UserButton } from "@clerk/nextjs";
 import { type RouterOutputs, api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { CreateLoadingSpinner } from "../loading";
+import { SignInPlate } from "~/components/SignInComponent/SignInComponent";
 
 type CommentType = RouterOutputs["comments"]["createComment"];
 const commentFormContentSchema = z.object({ content: z.string() }); //schema for form validation
@@ -19,17 +20,18 @@ const commentContentSchema = z.object({
 export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
   const [value, setValue] = useState("");
   const [height, setHeight] = useState("auto");
+  const { user, isSignedIn } = useUser();
   useEffect(() => {
     const textArea = document.getElementById("myTextArea");
+    // Counts inline height of textarea based on textarea's lineHeight & scrollHeight
     if (textArea) {
       textArea.style.height = `${parseInt(
         window.getComputedStyle(textArea).lineHeight
       )}px`;
       textArea.style.height = `${textArea.scrollHeight}px`;
     }
-  }, [value]);
+  }, [user, value]);
 
-  const { user, isSignedIn } = useUser();
   const { register, handleSubmit } = useForm<
     z.infer<typeof commentFormContentSchema>
   >({
@@ -59,16 +61,21 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
     },
     [createCommentReq]
   );
-  console.log(user, user?.username, isSignedIn);
   if (!user || !user.username || !isSignedIn) {
-    return <div />;
+    return (
+      <div className="flex flex-col border-b border-gray-600 px-4 py-3">
+        <SignInPlate text={"Sign in to make a comment down below"} />
+      </div>
+    );
   }
   return (
-    <div className="flex flex-col border-b border-gray-600 py-3 px-4">
+    <div className="flex flex-col border-b border-gray-600 px-4 pb-3 pt-1">
+      <div className="my-2 ml-16 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-lg font-extralight text-transparent">
+        Leave a comment down below
+      </div>
       <form
         onSubmit={handleSubmit(
           (data) => {
-            console.log(data);
             onValid({ content: data.content, postId });
           },
           (e) => {
@@ -88,7 +95,7 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
             {...register("content")}
             id="myTextArea"
             autoComplete="off"
-            placeholder="What is happening?"
+            placeholder="Say something back"
             value={value}
             onChange={(e) => {
               setValue(e.target.value);

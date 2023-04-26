@@ -7,6 +7,7 @@ import {
   infinitePostsByUserId,
   infiniteCommentsByPostId,
 } from "~/server/api/helpers/infiniteQueries";
+import cn from "classnames";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
 // in this component Comment or Post prisma schema is used for useInfiniteQuery
@@ -115,7 +116,10 @@ export const CreateReplyList = ({
 
   return (
     <>
-      <section id="scrollArea" className="border-t border-gray-600">
+      <section
+        id="scrollArea"
+        className={cn("border-gray-600", { ["border-t"]: !postId })}
+      >
         {/*Finally, based on presence of 'postId' value,
          CreateCommentView or CreatePostView will be created*/}
         {infiniteData.length > 0 &&

@@ -6,6 +6,7 @@ import { useUser, UserButton } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { CreateLoadingSpinner } from "../loading";
+import { SignInPlate } from "~/components/SignInComponent/SignInComponent";
 
 const postContentSchema = z.object({
   content: z
@@ -16,17 +17,18 @@ const postContentSchema = z.object({
 export const PostForm = () => {
   const [value, setValue] = useState("");
   const [height, setHeight] = useState("auto");
+  const { user, isSignedIn } = useUser();
   useEffect(() => {
     const textArea = document.getElementById("myTextArea");
+    // Counts inline height of textarea based on textarea's lineHeight & scrollHeight
     if (textArea) {
       textArea.style.height = `${parseInt(
         window.getComputedStyle(textArea).lineHeight
       )}px`;
       textArea.style.height = `${textArea.scrollHeight}px`;
     }
-  }, [value]);
+  }, [user, value]);
 
-  const { user, isSignedIn } = useUser();
   const { register, handleSubmit } = useForm<z.infer<typeof postContentSchema>>(
     {
       resolver: zodResolver(postContentSchema),
@@ -58,7 +60,11 @@ export const PostForm = () => {
   );
   console.log(user, user?.username, isSignedIn);
   if (!user || !user.username || !isSignedIn) {
-    return <div />;
+    return (
+      <div className="flex flex-col border-b border-gray-600 px-4 py-3">
+        <SignInPlate text="Sign in to create a post" />
+      </div>
+    );
   }
   return (
     <div className="flex flex-col border-b border-gray-600 py-3 px-4">
