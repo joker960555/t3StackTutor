@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { bindUserDataToPosts } from "~/server/api/helpers/bindUserDataToPosts";
+import { bindUserDataToPosts } from "~/server/api/helpers/bindUserDataToReplies";
 
 import {
   createTRPCRouter,
@@ -12,22 +12,7 @@ import { TRPCError } from "@trpc/server";
 //   const { id, profileImageUrl, username } = user;
 //   return { authorId: id, profileImageUrl, username };
 // };
-
-import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
-import { Redis } from "@upstash/redis";
-
-// Create a new ratelimiter, that allows 1 requests per 10 seconds
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(1, "10 s"),
-  analytics: true,
-  /**
-   * Optional prefix for the keys used in redis. This is useful if you want to share a redis
-   * instance with other applications and want to avoid key collisions. The default prefix is
-   * "@upstash/ratelimit"
-   */
-  prefix: "@upstash/ratelimit",
-});
+import { rateLimitHelper } from "~/server/api/helpers/rateLimitHelper";
 
 export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -71,7 +56,7 @@ export const postsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId;
-      const { success } = await ratelimit.limit(authorId);
+      const { success } = await rateLimitHelper.limit(authorId);
       if (!success)
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
@@ -88,17 +73,15 @@ export const postsRouter = createTRPCRouter({
     .input(
       z.object({
         authorId: z.string(),
-        limit: z.number().min(1).max(100),
+        limit: z.number().min(1).max(50),
         cursor: z.string().nullish(),
-        skip: z.number().optional(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const { cursor, authorId, limit, skip } = input;
+      const { cursor, authorId, limit } = input;
 
       const posts = await ctx.prisma.post.findMany({
         take: limit + 1,
-        skip: skip,
         cursor: cursor ? { id: cursor } : undefined,
         where: { authorId: { contains: authorId } },
         orderBy: { createdAt: "desc" },

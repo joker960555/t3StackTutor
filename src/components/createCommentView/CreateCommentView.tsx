@@ -6,13 +6,13 @@ import cn from "classnames";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 dayjs.extend(relativeTime);
-type userWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
 import { DotsSVG } from "public/svgs";
 import { PostOptionsMenu } from "../postOptionsMenu/PostOptionsMenu";
 import { checkForLongWord } from "~/server/api/helpers/checkForLongWord";
+type userWithCommentType = RouterOutputs["comments"]["getAll"][number];
 
-export const CreatePostView = (
-  props: userWithPostType & {
+export const CreateCommentView = (
+  props: userWithCommentType & {
     setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
   }
 ) => {
@@ -23,6 +23,7 @@ export const CreatePostView = (
     content,
     createdAt,
     setFlagToRefetch,
+    postId,
   } = props;
   const [openOptions, setOpenOptions] = useState(false);
   const [direction, setDirection] = useState<"toBottom" | "toTop">("toBottom");

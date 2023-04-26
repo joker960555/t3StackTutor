@@ -6,7 +6,11 @@ import cn from "classnames";
 import { TrashSVG } from "public/svgs/index";
 import { useSession } from "@clerk/nextjs";
 
-type userWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
+type UserWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
+// Technically UserWithPostType belongs to Posts data flow, which no matters
+// for usage with CreateComponentView components cause of unimportance of postId
+// value for this PostOptionsMenu component. So
+// PostOptionsMenu Can be used with Comments components
 export const PostOptionsMenu = ({
   // size of the menu 18rem, used to calculate the position of the menu in CreatePostView component
   direction,
@@ -14,7 +18,7 @@ export const PostOptionsMenu = ({
   setFlagToRefetch,
 }: {
   direction: "toTop" | "toBottom";
-  userWithPostData: userWithPostType;
+  userWithPostData: UserWithPostType;
   setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { isSignedIn, session } = useSession();

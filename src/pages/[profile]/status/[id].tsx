@@ -1,15 +1,22 @@
 import Head from "next/head";
 import Link from "next/link";
-import { api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 dayjs.extend(relativeTime);
 import { CreatePostView } from "~/components/createPostView/CreatePostView";
+import { CommentForm } from "~/components/createCommentForm/CreateCommentForm";
+import { CreateReplyList } from "~/components/createReplyList/CreateReplyList";
 
+type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
 const PostPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = api.posts.getUniquePostById.useQuery({ id });
   if (!data) return <div />;
-  const { username, content } = data;
+  const { data: comments } = api.comments.getAll.useQuery({ postId: data.id });
+  console.log(comments);
+  const { username, content, profileImageUrl, authorId } = data;
+  const userData: userProfileType = { authorId, profileImageUrl, username };
+  const postId = data.id;
   const headerTitle =
     content.length > 5 ? `${content.slice(0, 4)}...` : content;
   return (
@@ -32,6 +39,11 @@ const PostPage = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
       </header>
       <div className="w-full border-b border-gray-600"></div>
       <CreatePostView {...data} />
+      <div>
+        <CommentForm postId={data.id} />
+        {/* LIST OF COMMENTS */}
+        <CreateReplyList {...userData} postId={postId} />{" "}
+      </div>
     </>
   );
 };
