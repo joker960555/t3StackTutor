@@ -41,6 +41,7 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
     api.comments.createComment.useMutation({
       onSuccess: () => {
         void ctx.comments.getAll.invalidate();
+        void ctx.comments.getInfiniteComments.invalidate();
         setValue("");
       },
       onError: (e) => {

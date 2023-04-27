@@ -38,6 +38,7 @@ export const commentsRouter = createTRPCRouter({
           code: "TOO_MANY_REQUESTS",
           message: "You exceeded the limit of 1 post per 10 seconds",
         });
+      console.log(authorId, ctx.userId);
       const comment = await ctx.prisma.comment.create({
         data: { postId, content, authorId },
       });
@@ -64,6 +65,7 @@ export const commentsRouter = createTRPCRouter({
         const nextItem = comments.pop();
         nextCursor = nextItem?.id;
       }
-      return { comments, nextCursor };
+      // const commentsWithUserData = await bindUserDataToComments(comments);
+      return { comments: await bindUserDataToComments(comments), nextCursor };
     }),
 });

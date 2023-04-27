@@ -10,6 +10,8 @@ import {
 import cn from "classnames";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
+type CommentsWithPosts =
+  RouterOutputs["comments"]["getInfiniteComments"]["comments"][number];
 // in this component Comment or Post prisma schema is used for useInfiniteQuery
 // 'replies' fetching. Through ternary conditions and based on providing of
 // 'postId' property to CreateReplyList component, 'replies' data is defined as
@@ -24,48 +26,57 @@ export const CreateReplyList = ({
   const [page, setPage] = useState(0);
   const [flagToRefetch, setFlagToRefetch] = useState<boolean>(false);
   const elemRef = useRef(null);
+  // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE FETCHED | INFINITE('POSTS') OTHERWISE
   const { data, hasNextPage, fetchNextPage, isFetched, refetch, isRefetching } =
     postId
       ? infiniteCommentsByPostId({ postId })
-      : infinitePostsByUserId({ authorId }); // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE FETCHED | INFINITE('POSTS') OTHERWISE
-  const [infiniteData, setInfiniteData] = useState<[] | Post[] | Comment[]>([]);
+      : infinitePostsByUserId({ authorId });
+  const [infiniteData, setInfiniteData] = useState<
+    [] | Post[] | CommentsWithPosts[]
+  >([]);
   useEffect(() => {
+    // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE INVALIDATED | INFINITE('POSTS') OTHERWISE
     if (flagToRefetch === true) {
       postId
         ? void ctx.posts.getInfinitePostsByUserId.invalidate()
-        : void ctx.comments.getInfiniteComments.invalidate(); // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE INVALIDATED | INFINITE('POSTS') OTHERWISE
-      setFlagToRefetch(false); // onDelete refetch useInfiniteQuery Replies (COMMENTS | POSTS)
+        : void ctx.comments.getInfiniteComments.invalidate();
+      // onDelete refetch useInfiniteQuery Replies (COMMENTS | POSTS)
+      setFlagToRefetch(false);
       void refetch().then((resp) => {
         if (resp.isSuccess) {
+          // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
           setInfiniteData(() =>
             resp.data.pages.flatMap((page) =>
               "comments" in page ? page.comments : page.posts
             )
-          ); // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
+          );
         }
       });
     }
   }, [flagToRefetch]);
   useEffect(() => {
     if (data && data.pages && data.pages[0]) {
+      // setInfiniteData of First Page through ternary condition between 'comments' : 'posts' instances of 'page'
       const firstPageOfQuery =
         "comments" in data.pages[0]
           ? data.pages[0].comments
-          : data.pages[0].posts; // setInfiniteData of First Page through ternary condition between 'comments' : 'posts' instances of 'page'
+          : data.pages[0].posts;
       if (page === 0) {
         setInfiniteData(firstPageOfQuery);
         setPage((page) => page + 1);
         if (!hasNextPage)
+          // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
           setInfiniteData(
             data?.pages.flatMap((page) => {
-              return "comments" in page ? page.comments : page.posts; // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
+              return "comments" in page ? page.comments : page.posts;
             })
           );
       }
       if (!isRefetching) {
+        // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
         setInfiniteData(
           data?.pages.flatMap((page) => {
-            return "comments" in page ? page.comments : page.posts; // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
+            return "comments" in page ? page.comments : page.posts;
           })
         );
       }
@@ -89,15 +100,16 @@ export const CreateReplyList = ({
     };
   }, [page, isFetched]);
   const handeNextPage = () => {
-    let fetchedData: Comment[] | Post[] | undefined = undefined;
+    let fetchedData: CommentsWithPosts[] | Post[] | undefined = undefined;
     void fetchNextPage()
       .then((resp) => {
         const commentsOrPosts = resp.data?.pages[page];
         if (resp.isSuccess && commentsOrPosts) {
+          // set fetchedData through ternary condition between 'comments' : 'posts' instances of 'page'
           fetchedData =
             "comments" in commentsOrPosts
               ? commentsOrPosts.comments
-              : commentsOrPosts?.posts; // set fetchedData through ternary condition between 'comments' : 'posts' instances of 'page'
+              : commentsOrPosts?.posts;
         }
         if (fetchedData) {
           setPage((page) => page + 1);
@@ -113,7 +125,6 @@ export const CreateReplyList = ({
         })
       );
   };
-
   return (
     <>
       <section
@@ -127,7 +138,7 @@ export const CreateReplyList = ({
             return "postId" in commentOrPost ? (
               <CreateCommentView
                 {...commentOrPost}
-                {...{ profileImageUrl, username, authorId }}
+                // {...{ profileImageUrl, username, authorId }}
                 setFlagToRefetch={setFlagToRefetch}
                 key={commentOrPost.id}
               />

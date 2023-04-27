@@ -91,6 +91,7 @@ export const postsRouter = createTRPCRouter({
         const nextItem = posts.pop();
         nextCursor = nextItem?.id;
       }
+      // const postsWithUserData = bindUserDataToPosts(posts);
       return { posts, nextCursor };
     }),
   removeUniquePostById: privateProcedure

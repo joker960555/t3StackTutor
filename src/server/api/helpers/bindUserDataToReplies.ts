@@ -14,8 +14,8 @@ const fetchUserData = async (userId: string[] | undefined, limit: number) => {
 };
 
 export const bindUserDataToComments = async (comments: Comment[]) => {
-  const userId = comments.map((comment) => comment.authorId);
-  const users = await fetchUserData(userId, 100);
+  const userIdArr = comments.map((comment) => comment.authorId);
+  const users = await fetchUserData(userIdArr, 100);
 
   const userWithComments = comments.map((comment) => {
     const userWithComment = users.find((user) => {
@@ -37,8 +37,8 @@ export const bindUserDataToComments = async (comments: Comment[]) => {
 };
 
 export const bindUserDataToPosts = async (posts: Post[]) => {
-  const userId = posts.map((post) => post.authorId);
-  const users = await fetchUserData(userId, 100);
+  const userIdArr = posts.map((post) => post.authorId);
+  const users = await fetchUserData(userIdArr, 100);
 
   const userWithPosts = posts.map((post) => {
     const userWithPost = users.find((user) => {
