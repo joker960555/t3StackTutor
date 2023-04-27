@@ -99,6 +99,7 @@ export const CreateReplyList = ({
       }
     };
   }, [page, isFetched]);
+  if (!data) return <div></div>;
   const handeNextPage = () => {
     let fetchedData: CommentsWithPosts[] | Post[] | undefined = undefined;
     void fetchNextPage()

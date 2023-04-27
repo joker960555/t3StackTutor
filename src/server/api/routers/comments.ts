@@ -65,7 +65,9 @@ export const commentsRouter = createTRPCRouter({
         const nextItem = comments.pop();
         nextCursor = nextItem?.id;
       }
-      // const commentsWithUserData = await bindUserDataToComments(comments);
-      return { comments: await bindUserDataToComments(comments), nextCursor };
+      // If !comments in DB to bind userData to, return [] to the client
+      const commentsWithUserData =
+        comments.length > 0 ? await bindUserDataToComments(comments) : [];
+      return { comments: commentsWithUserData, nextCursor };
     }),
 });
