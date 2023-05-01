@@ -6,7 +6,9 @@ import { useUser, UserButton } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { CreateLoadingSpinner } from "../loading";
-import { SignInPlate } from "~/components/SignInComponent/SignInComponent";
+import { SignInPlate } from "~/components/SignInComponents/SignInComponents";
+import { useTheme } from "next-themes";
+import cn from "classnames";
 
 const postContentSchema = z.object({
   content: z
@@ -17,6 +19,7 @@ const postContentSchema = z.object({
 export const PostForm = () => {
   const [value, setValue] = useState("");
   const [height, setHeight] = useState("auto");
+  const { theme } = useTheme();
   const { user, isSignedIn } = useUser();
   useEffect(() => {
     const textArea = document.getElementById("myTextArea");
@@ -87,7 +90,13 @@ export const PostForm = () => {
           />
 
           <textarea
-            className=" grow resize-none overflow-y-hidden whitespace-pre-wrap bg-black py-4 outline-none"
+            className={cn(
+              "grow resize-none overflow-y-hidden whitespace-pre-wrap py-4 outline-none",
+              {
+                ["bg-zinc-900"]: theme === "dark",
+                ["bg-slate-200 placeholder:text-slate-500"]: theme === "light",
+              }
+            )}
             {...register("content")}
             id="myTextArea"
             autoComplete="off"
@@ -118,7 +127,13 @@ export const PostForm = () => {
 
             <button
               type="submit"
-              className=" rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 disabled:opacity-60 disabled:hover:bg-blue-500"
+              className={cn(
+                "rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 disabled:opacity-60 disabled:hover:bg-blue-500",
+                {
+                  ["text-neutral-800 hover:text-neutral-900"]:
+                    theme === "light",
+                }
+              )}
               disabled={isPosting || !value}
             >
               Tweet

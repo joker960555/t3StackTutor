@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { type RouterOutputs } from "~/utils/api";
@@ -9,6 +9,7 @@ dayjs.extend(relativeTime);
 import { DotsSVG } from "public/svgs";
 import { PostOptionsMenu } from "../postOptionsMenu/PostOptionsMenu";
 import { checkForLongWord } from "~/server/api/helpers/checkForLongWord";
+import { useTheme } from "next-themes";
 type userWithCommentType = RouterOutputs["comments"]["getAll"][number];
 
 export const CreateCommentView = (
@@ -23,10 +24,15 @@ export const CreateCommentView = (
     content,
     createdAt,
     setFlagToRefetch,
-    postId,
   } = props;
   const [openOptions, setOpenOptions] = useState(false);
   const [direction, setDirection] = useState<"toBottom" | "toTop">("toBottom");
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState<boolean>(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) return null;
   const toggleOptionsMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
     const currentFontSize = parseFloat(
@@ -70,10 +76,14 @@ export const CreateCommentView = (
           <div
             onClick={(e) => toggleOptionsMenu(e)}
             className={cn(
-              "relative h-7 w-7 cursor-pointer rounded-full transition-all hover:bg-sky-200 hover:bg-opacity-30 hover:text-sky-600 active:bg-sky-400 active:bg-opacity-40",
+              "relative h-7 w-7 cursor-pointer rounded-full transition-all",
               {
                 ["cursor-default bg-transparent hover:bg-transparent active:bg-transparent"]:
                   openOptions,
+                ["hover:bg-sky-200 hover:bg-opacity-30 hover:text-sky-600 active:bg-sky-400 active:bg-opacity-40"]:
+                  theme === "dark",
+                ["hover:bg-sky-400 hover:bg-opacity-30 hover:text-sky-800 active:bg-sky-600 active:bg-opacity-40"]:
+                  theme === "light",
               }
             )}
           >

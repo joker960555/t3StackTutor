@@ -1,11 +1,12 @@
+import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
 import { CreateProfileView } from "~/components/createProfileView/CreateProfileView";
 
 export type ProfilePageType = InferGetStaticPropsType<typeof getStaticProps>;
-const ProfilePage = ({
+const ProfilePage: NextPage<ProfilePageType> = ({
   username,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+}: ProfilePageType) => {
   const { data } = api.profile.getProfileByUserName.useQuery({
     username,
   });

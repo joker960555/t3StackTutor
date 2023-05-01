@@ -7,9 +7,13 @@
 }
 
 body {
-  @apply m-0 bg-black text-slate-100;
+  /* @apply m-0 bg-black text-slate-100; */
   overscroll-behavior: none;
+  /*prevent page scroll from resizing the page content*/
+  @apply overflow-x-hidden overflow-y-scroll;
 }
 html {
-  scrollbar-gutter: stable both-edges;
+  /* scrollbar-gutter: stable both-edges; */
+  /* @apply overflow-x-hidden; */
+  /* @apply dark:bg-slate-50; */
 }

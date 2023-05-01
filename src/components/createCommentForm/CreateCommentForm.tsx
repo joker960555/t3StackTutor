@@ -6,7 +6,9 @@ import { useUser, UserButton } from "@clerk/nextjs";
 import { type RouterOutputs, api } from "~/utils/api";
 import toast from "react-hot-toast";
 import { CreateLoadingSpinner } from "../loading";
-import { SignInPlate } from "~/components/SignInComponent/SignInComponent";
+import { SignInPlate } from "~/components/SignInComponents/SignInComponents";
+import { useTheme } from "next-themes";
+import cn from "classnames";
 
 type CommentType = RouterOutputs["comments"]["createComment"];
 const commentFormContentSchema = z.object({ content: z.string() }); //schema for form validation
@@ -21,6 +23,11 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
   const [value, setValue] = useState("");
   const [height, setHeight] = useState("auto");
   const { user, isSignedIn } = useUser();
+  const { theme } = useTheme();
+  // const [mounted, setMounted] = useState<boolean>(false);
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
   useEffect(() => {
     const textArea = document.getElementById("myTextArea");
     // Counts inline height of textarea based on textarea's lineHeight & scrollHeight
@@ -31,7 +38,6 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
       textArea.style.height = `${textArea.scrollHeight}px`;
     }
   }, [user, value]);
-
   const { register, handleSubmit } = useForm<
     z.infer<typeof commentFormContentSchema>
   >({
@@ -69,6 +75,7 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
       </div>
     );
   }
+  // if (!mounted) return <div />;
   return (
     <div className="flex flex-col border-b border-gray-600 px-4 pb-3 pt-1">
       <div className="my-2 ml-16 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-lg font-extralight text-transparent">
@@ -92,7 +99,13 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
           />
 
           <textarea
-            className=" grow resize-none overflow-y-hidden whitespace-pre-wrap bg-black py-4 outline-none"
+            className={cn(
+              "grow resize-none overflow-y-hidden whitespace-pre-wrap py-4 outline-none",
+              {
+                ["bg-zinc-900"]: theme === "dark",
+                ["bg-slate-200 placeholder:text-slate-500"]: theme === "light",
+              }
+            )}
             {...register("content")}
             id="myTextArea"
             autoComplete="off"
@@ -123,7 +136,13 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
 
             <button
               type="submit"
-              className=" rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 disabled:opacity-60 disabled:hover:bg-blue-500"
+              className={cn(
+                "rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 disabled:opacity-60 disabled:hover:bg-blue-500",
+                {
+                  ["text-neutral-800 hover:text-neutral-900"]:
+                    theme === "light",
+                }
+              )}
               disabled={isPosting || !value}
             >
               Answer

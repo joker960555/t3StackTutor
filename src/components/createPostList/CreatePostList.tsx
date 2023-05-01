@@ -5,7 +5,7 @@ import type { Post } from "@prisma/client";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
 export const CreatePostList = (props: userProfileType) => {
-  const { username, profileImageUrl, authorId } = props;
+  const { authorId } = props;
   const limit = 10;
   const [page, setPage] = useState(0);
   const [flagToRefetch, setFlagToRefetch] = useState<boolean>(false);

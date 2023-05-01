@@ -1,12 +1,21 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type RouterOutputs } from "~/utils/api";
 import { CreateReplyList } from "../createReplyList/CreateReplyList";
+import { useTheme } from "next-themes";
+import cn from "classnames";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
 export const CreateProfileView = (props: { data: userProfileType }) => {
   const { data } = props;
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState<boolean>(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
+  if (!mounted) return null;
   if (!data) {
     return <div />;
   }
@@ -15,13 +24,28 @@ export const CreateProfileView = (props: { data: userProfileType }) => {
     <>
       <header className=" flex cursor-pointer items-center gap-x-8 px-2 py-1">
         <Link className="" href={"/"}>
-          <span className="flex h-8 w-8 items-center justify-center rounded-full transition-all hover:bg-gray-900">
+          <span
+            className={cn(
+              "active-scale-100 flex h-8 w-8 items-center justify-center rounded-full transition-all hover:scale-105",
+              {
+                ["hover:bg-gray-700"]: theme === "dark",
+                ["hover:bg-gray-400"]: theme === "light",
+              }
+            )}
+          >
             &#8592;
           </span>
         </Link>
         <div className="flex flex-col ">
           <span className="text-lg font-semibold leading-6">{username}</span>
-          <span className="text-xs font-light text-gray-400 ">dude</span>
+          <span
+            className={cn("text-xs font-light text-gray-400", {
+              ["text-gray-400"]: theme === "dark",
+              ["text-gray-500"]: theme === "light",
+            })}
+          >
+            dude
+          </span>
         </div>
       </header>
       <section className=" relative block h-48 bg-gradient-to-r from-yellow-400 to-blue-800 ">
