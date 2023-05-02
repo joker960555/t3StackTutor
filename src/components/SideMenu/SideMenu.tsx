@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SignIn, useUser } from "@clerk/nextjs";
 import cn from "classnames";
-import { ThemeToggler } from "~/components/themeToggler/themeToggler";
+import { ThemeToggler } from "~/components/themeToggler/ThemeToggler";
 import { ArrowSVG } from "public/svgs/index";
 import {
   SignInSideButton,
