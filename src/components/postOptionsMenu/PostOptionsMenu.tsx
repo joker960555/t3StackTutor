@@ -33,7 +33,6 @@ export const PostOptionsMenu = ({
         : setButtonDisabled(true);
     }
   }, []); // Disables menu Button if authorID not belongs to session.user
-  console.log("CONSOLLE", session?.user.id, isSignedIn);
   const { mutate } = api.posts.removeUniquePostById.useMutation({
     onSuccess: () => {
       switch (lastPartOfCurrentURL) {
@@ -60,14 +59,14 @@ export const PostOptionsMenu = ({
     <>
       <div
         className={cn(
-          `absolute right-1 flex h-72 w-72 flex-col overflow-hidden rounded-lg bg-black shadow-equal shadow-gray-500`,
+          `absolute right-1 flex h-72 w-72 flex-col overflow-hidden rounded-lg bg-slate-300 shadow-equal shadow-gray-500 dark:bg-black`,
           { ["top-1"]: direction === "toBottom" },
           { ["-bottom-6"]: direction === "toTop" }
         )}
       >
         <Link
           className={cn(
-            "h-12 w-full items-center overflow-hidden px-4 py-2 transition-all hover:bg-neutral-900",
+            "h-12 w-full items-center overflow-hidden px-4 py-2 transition-all hover:bg-gray-400 dark:hover:bg-neutral-900",
             {
               ["pointer-events-none cursor-default opacity-50"]:
                 buttonDisabled === true,

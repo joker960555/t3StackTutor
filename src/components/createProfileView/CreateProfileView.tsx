@@ -1,21 +1,12 @@
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type RouterOutputs } from "~/utils/api";
 import { CreateReplyList } from "../createReplyList/CreateReplyList";
-import { useTheme } from "next-themes";
 import cn from "classnames";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
 export const CreateProfileView = (props: { data: userProfileType }) => {
   const { data } = props;
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState<boolean>(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
   if (!data) {
     return <div />;
   }
@@ -26,11 +17,7 @@ export const CreateProfileView = (props: { data: userProfileType }) => {
         <Link className="" href={"/"}>
           <span
             className={cn(
-              "active-scale-100 flex h-8 w-8 items-center justify-center rounded-full transition-all hover:scale-105",
-              {
-                ["hover:bg-gray-700"]: theme === "dark",
-                ["hover:bg-gray-400"]: theme === "light",
-              }
+              "active-scale-100 flex h-8 w-8 items-center justify-center rounded-full transition-all hover:scale-105 hover:bg-gray-400 dark:hover:bg-gray-700"
             )}
           >
             &#8592;
@@ -39,10 +26,9 @@ export const CreateProfileView = (props: { data: userProfileType }) => {
         <div className="flex flex-col ">
           <span className="text-lg font-semibold leading-6">{username}</span>
           <span
-            className={cn("text-xs font-light text-gray-400", {
-              ["text-gray-400"]: theme === "dark",
-              ["text-gray-500"]: theme === "light",
-            })}
+            className={cn(
+              "text-xs font-light text-gray-500 dark:text-gray-400"
+            )}
           >
             dude
           </span>

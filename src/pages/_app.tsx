@@ -3,20 +3,30 @@ import Head from "next/head";
 
 import { api } from "~/utils/api";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider, useTheme } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import { MainLayout } from "~/components/mainLayout/MainLayout";
 
 import "~/styles/globals.css";
+import { useState, useEffect } from "react";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  // const [mounted, setMounted] = useState<boolean>(false);
+  // // enable theme when mounted
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
+  // const { theme } = useTheme();
+  // console.log(theme, "theme");
+  // if (!mounted) return null;
   return (
-    <ClerkProvider {...pageProps}>
-      <ThemeProvider enableSystem={true} attribute="class">
+    <ThemeProvider enableSystem={true} attribute="class">
+      <ClerkProvider {...pageProps}>
         <Head>
           <title>Letters</title>
           <meta name="description" content="WoW" />
+          {/* <meta name="color-scheme" content="light dark" /> */}
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Toaster
@@ -29,8 +39,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         </MainLayout>
         <Analytics />
         {/* <Component {...pageProps} /> */}
-      </ThemeProvider>
-    </ClerkProvider>
+      </ClerkProvider>
+    </ThemeProvider>
   );
 };
 

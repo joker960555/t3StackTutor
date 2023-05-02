@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { type RouterOutputs } from "~/utils/api";
@@ -10,7 +10,6 @@ type userWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
 import { DotsSVG } from "public/svgs";
 import { PostOptionsMenu } from "../postOptionsMenu/PostOptionsMenu";
 import { checkForLongWord } from "~/server/api/helpers/checkForLongWord";
-import { useTheme } from "next-themes";
 
 export const CreatePostView = (
   props: userWithPostType & {
@@ -27,12 +26,6 @@ export const CreatePostView = (
   } = props;
   const [openOptions, setOpenOptions] = useState(false);
   const [direction, setDirection] = useState<"toBottom" | "toTop">("toBottom");
-  const { theme } = useTheme();
-  const [mounted, setMounted] = useState<boolean>(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  if (!mounted) return null;
   const toggleOptionsMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
     const currentFontSize = parseFloat(
@@ -77,14 +70,10 @@ export const CreatePostView = (
           <div
             onClick={(e) => toggleOptionsMenu(e)}
             className={cn(
-              "relative h-7 w-7 cursor-pointer rounded-full transition-all",
+              "relative h-7 w-7 cursor-pointer rounded-full transition-all hover:bg-sky-400 hover:bg-opacity-30 hover:text-sky-800 active:bg-sky-600 active:bg-opacity-40 dark:hover:bg-sky-200 dark:hover:bg-opacity-30 dark:hover:text-sky-600 dark:active:bg-sky-400 dark:active:bg-opacity-40",
               {
                 ["cursor-default bg-transparent hover:bg-transparent active:bg-transparent"]:
                   openOptions,
-                ["hover:bg-sky-200 hover:bg-opacity-30 hover:text-sky-600 active:bg-sky-400 active:bg-opacity-40"]:
-                  theme === "dark",
-                ["hover:bg-sky-400 hover:bg-opacity-30 hover:text-sky-800 active:bg-sky-600 active:bg-opacity-40"]:
-                  theme === "light",
               }
             )}
           >
