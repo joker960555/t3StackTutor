@@ -7,7 +7,7 @@ export const SignInSideButton = () => {
     <SignInButton>
       <button
         className={cn(
-          "h-full w-full text-lg font-medium text-slate-300 dark:text-slate-200"
+          "h-full w-full text-sm font-medium text-slate-300 dark:text-slate-200 sm:text-lg"
         )}
       >
         SignIn
@@ -26,7 +26,7 @@ export const SignOutSideButton = () => {
     <SignOutButton>
       <button
         className={cn(
-          "h-full w-full text-lg font-medium text-slate-300 transition-all hover:text-slate-400 dark:text-slate-200 dark:hover:text-slate-400"
+          "h-full w-full text-sm font-medium text-slate-200 transition-all hover:text-slate-400 dark:text-slate-200 dark:hover:text-slate-400 sm:text-lg sm:text-slate-300"
         )}
       >
         SignOut

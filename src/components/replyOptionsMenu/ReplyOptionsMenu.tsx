@@ -1,30 +1,32 @@
 import { useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
-import { type RouterOutputs, api } from "~/utils/api";
+import type { RouterOutputs } from "~/utils/api";
+import type { Comment } from "@prisma/client";
+import {
+  deletePostById,
+  deleteCommentById,
+} from "~/server/api/helpers/deleteQueries";
 import cn from "classnames";
 import { TrashSVG } from "public/svgs/index";
 import { useSession } from "@clerk/nextjs";
 
 type UserWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
-// Technically UserWithPostType belongs to Posts data flow, which no matters
-// for usage with CreateComponentView components cause of unimportance of postId
-// value for this PostOptionsMenu component. So
-// PostOptionsMenu Can be used with Comments components
-export const PostOptionsMenu = ({
+
+export const ReplyOptionsMenu = ({
   // size of the menu 18rem, used to calculate the position of the menu in CreatePostView component
   direction,
-  userWithPostData,
+  userWithPostOrCommentData,
   setFlagToRefetch,
 }: {
   direction: "toTop" | "toBottom";
-  userWithPostData: UserWithPostType;
+  userWithPostOrCommentData: UserWithPostType &
+    Partial<Pick<Comment, "postId">>;
   setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { isSignedIn, session } = useSession();
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  const { id, authorId, username } = userWithPostData;
-  const ctx = api.useContext();
+  const { id, authorId, username, postId } = userWithPostOrCommentData;
   const lastPartOfCurrentURL = window.location.href.split("/").pop()!;
   useEffect(() => {
     if (isSignedIn) {
@@ -33,23 +35,16 @@ export const PostOptionsMenu = ({
         : setButtonDisabled(true);
     }
   }, []); // Disables menu Button if authorID not belongs to session.user
-  const { mutate } = api.posts.removeUniquePostById.useMutation({
-    onSuccess: () => {
-      switch (lastPartOfCurrentURL) {
-        case username:
-          if (setFlagToRefetch) setFlagToRefetch(true); // onDelete refetch useInfiniteQuery posts
-          break;
-
-        default:
-          void ctx.posts.getAll.invalidate();
-          break;
-      }
-    },
-  });
+  // if postId is provided, deleteCommentById, otherwise deletePostById
+  const { mutate } = postId
+    ? deleteCommentById(setFlagToRefetch)
+    : deletePostById(setFlagToRefetch, lastPartOfCurrentURL, username);
   const conditionOnRedirectToHomePageBeforeDelete = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
-    if (lastPartOfCurrentURL !== id) {
+    if (lastPartOfCurrentURL !== id || postId) {
+      //redirects to home page when deleting post on [postId] page or
+      // when !postId prop provided
       e.preventDefault();
       e.stopPropagation();
     }
@@ -78,7 +73,7 @@ export const PostOptionsMenu = ({
           }}
         >
           <div className="flex  h-full w-full items-center gap-2">
-            <TrashSVG className="h-6 w-6 fill-red-600"></TrashSVG>
+            <TrashSVG className="h-6 w-6 fill-red-600" />
             <p className=" text-base font-bold text-red-600">Delete</p>
           </div>
         </Link>

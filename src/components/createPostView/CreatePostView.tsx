@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 dayjs.extend(relativeTime);
 type userWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
 import { DotsSVG } from "public/svgs";
-import { PostOptionsMenu } from "../postOptionsMenu/PostOptionsMenu";
+import { ReplyOptionsMenu } from "../replyOptionsMenu/ReplyOptionsMenu";
 import { checkForLongWord } from "~/server/api/helpers/checkForLongWord";
 
 export const CreatePostView = (
@@ -31,14 +31,15 @@ export const CreatePostView = (
     const currentFontSize = parseFloat(
       getComputedStyle(document.documentElement).fontSize
     );
+    // calculate the space between the cursor and the bottom of the screen in REM
     const spaceToTheBottomInRem =
-      (document.documentElement.clientHeight - e.clientY) / currentFontSize; // calculate the space between the cursor and the bottom of the screen in REM
+      (document.documentElement.clientHeight - e.clientY) / currentFontSize;
     setOpenOptions((open) => !open);
-    setDirection(() => (spaceToTheBottomInRem > 18 ? "toBottom" : "toTop")); // calculated value is compared to the size of the menu (18rem)
+    // calculated value is compared to the size of the menu (18rem)
+    setDirection(() => (spaceToTheBottomInRem > 18 ? "toBottom" : "toTop"));
   };
-
   return (
-    <div className="flex items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm">
+    <div className="flex w-full items-center gap-4 border-b border-gray-600 py-3 px-4 text-sm">
       <div className="self-start justify-self-start">
         <Link href={`/${username}`} className="block h-12 w-12 rounded-full ">
           <Image
@@ -70,7 +71,7 @@ export const CreatePostView = (
           <div
             onClick={(e) => toggleOptionsMenu(e)}
             className={cn(
-              "relative h-7 w-7 cursor-pointer rounded-full transition-all hover:bg-sky-400 hover:bg-opacity-30 hover:text-sky-800 active:bg-sky-600 active:bg-opacity-40 dark:hover:bg-sky-200 dark:hover:bg-opacity-30 dark:hover:text-sky-600 dark:active:bg-sky-400 dark:active:bg-opacity-40",
+              "relative h-7 w-7 cursor-pointer rounded-full transition-all active:bg-sky-600 active:bg-opacity-40 dark:active:bg-sky-400 dark:active:bg-opacity-40 hover-hover:hover:bg-sky-400 hover-hover:hover:bg-opacity-30 hover-hover:hover:text-sky-800 hover-hover:dark:hover:bg-sky-200 hover-hover:dark:hover:bg-opacity-30 hover-hover:dark:hover:text-sky-600 ",
               {
                 ["cursor-default bg-transparent hover:bg-transparent active:bg-transparent"]:
                   openOptions,
@@ -93,8 +94,8 @@ export const CreatePostView = (
               )}
             >
               {openOptions && (
-                <PostOptionsMenu
-                  userWithPostData={props}
+                <ReplyOptionsMenu
+                  userWithPostOrCommentData={props}
                   direction={direction}
                   setFlagToRefetch={setFlagToRefetch}
                 />
@@ -114,7 +115,8 @@ export const CreatePostView = (
           replace={true}
           className="-my-1" //make the post clickable; -margin top to compose post
         >
-          {checkForLongWord(content, 45) ? ( //check the longest word and brake it if it is longer than 45
+          {checkForLongWord(content, 43) ? (
+            //check the longest word and if it is longer than 43 brakes the text
             <p className="break-all">{content}</p>
           ) : (
             <p className="break-words">{content}</p>

@@ -70,4 +70,16 @@ export const commentsRouter = createTRPCRouter({
         comments.length > 0 ? await bindUserDataToComments(comments) : [];
       return { comments: commentsWithUserData, nextCursor };
     }),
+  removeUniqueCommentById: privateProcedure
+    .input(z.object({ id: z.string(), authorId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, authorId } = input;
+      const { userId } = ctx;
+      if (authorId !== userId)
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You are not author the of this comment",
+        });
+      await ctx.prisma.comment.delete({ where: { id } });
+    }),
 });

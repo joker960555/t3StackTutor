@@ -13,16 +13,16 @@ export const SideMenu = () => {
 
   return (
     <div
-      className={cn("fixed top-1 flex h-32 w-40 transition-all", {
+      className={cn("fixed top-1 hidden h-32 w-48 transition-all sm:flex", {
         ["right-1 translate-x-0"]: active === true,
         ["-right-1 translate-x-4/5"]: active === false,
       })}
     >
-      <div className="flex w-1/5 justify-center">
-        <div className="mt-4 h-min" onClick={() => setActive((prev) => !prev)}>
+      <div className="flex w-1/5">
+        <div className="mt-3 h-min" onClick={() => setActive((prev) => !prev)}>
           <ArrowSVG
             className={cn(
-              "h-7 w-7 cursor-pointer fill-slate-800 transition-all hover:scale-105 hover:fill-slate-900 active:scale-100 dark:fill-slate-300 dark:hover:scale-105 dark:hover:fill-slate-400 dark:active:scale-100",
+              "h-auto w-9 cursor-pointer fill-slate-800 transition-all hover:scale-105 hover:fill-slate-900 active:scale-100 dark:fill-slate-300 dark:hover:scale-105 dark:hover:fill-slate-400 dark:active:scale-100",
               {
                 ["rotate-180"]: active === true,
               }
@@ -45,10 +45,29 @@ export const SideMenu = () => {
             "h-1/2 rounded-lg bg-zinc-700 transition-all hover:bg-zinc-800 dark:hover:bg-zinc-600"
           )}
         >
-          <ThemeToggler />
+          <ThemeToggler sideMenuToggler={true} />
         </div>
       </div>
       <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
     </div>
+  );
+};
+
+export const SideMenuMobile = () => {
+  const { isSignedIn } = useUser();
+
+  return (
+    <>
+      <div className="block h-10 bg-current sm:hidden"></div>
+      <div className=" fixed top-0 z-50 flex h-10 w-full justify-between bg-gradient-to-r from-blue-800 to-blue-900 py-2 px-4 text-slate-200 sm:hidden">
+        Typesparks
+        <div className="grow"></div>
+        <div className="flex gap-4">
+          {!isSignedIn && <SignInSideButton />}
+          {!!isSignedIn && <SignOutSideButton />}
+          <ThemeToggler />
+        </div>
+      </div>
+    </>
   );
 };

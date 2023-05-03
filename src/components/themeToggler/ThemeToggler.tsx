@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { SunSVG, MoonSVG } from "public/svgs/index";
 import cn from "classnames";
 
-export const ThemeToggler = () => {
+export const ThemeToggler = ({
+  sideMenuToggler = false,
+}: {
+  sideMenuToggler?: boolean;
+}) => {
   const [mounted, setMounted] = useState(false);
   const { theme, systemTheme, setTheme } = useTheme();
 
@@ -15,15 +20,26 @@ export const ThemeToggler = () => {
   const currentTheme = theme === "system" ? systemTheme : theme;
 
   return (
-    <button
-      onClick={() =>
-        currentTheme === "dark" ? setTheme("light") : setTheme("dark")
-      }
-      className={cn(
-        "h-full w-full text-lg font-medium text-slate-200 transition-all hover:text-slate-400 dark:text-slate-300"
-      )}
+    <div
+      className={cn("w-6", {
+        ["flex h-full w-full items-center justify-center"]: sideMenuToggler,
+      })}
     >
-      {currentTheme === "dark" ? "Light" : "Dark"}
-    </button>
+      {currentTheme === "dark" ? (
+        <SunSVG
+          className={cn("h-6 w-6 cursor-pointer fill-slate-200", {
+            ["h-3/4 w-3/4 fill-slate-300"]: sideMenuToggler,
+          })}
+          onClick={() => setTheme("light")}
+        />
+      ) : (
+        <MoonSVG
+          className={cn("h-6 w-6 cursor-pointer stroke-slate-200", {
+            ["h-3/4 w-3/4 stroke-slate-300"]: sideMenuToggler,
+          })}
+          onClick={() => setTheme("dark")}
+        />
+      )}
+    </div>
   );
 };

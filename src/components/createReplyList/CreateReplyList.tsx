@@ -22,7 +22,6 @@ export const CreateReplyList = ({
   username,
   postId,
 }: userProfileType & Partial<Pick<Comment, "postId">>) => {
-  // const { username, profileImageUrl, authorId } = props;
   const [page, setPage] = useState(0);
   const [flagToRefetch, setFlagToRefetch] = useState<boolean>(false);
   const elemRef = useRef(null);
@@ -35,7 +34,8 @@ export const CreateReplyList = ({
     [] | Post[] | CommentsWithPosts[]
   >([]);
   useEffect(() => {
-    // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE INVALIDATED | INFINITE('POSTS') OTHERWISE
+    // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE
+    // INVALIDATED | INFINITE('POSTS') OTHERWISE
     if (flagToRefetch === true) {
       postId
         ? void ctx.posts.getInfinitePostsByUserId.invalidate()
@@ -44,7 +44,8 @@ export const CreateReplyList = ({
       setFlagToRefetch(false);
       void refetch().then((resp) => {
         if (resp.isSuccess) {
-          // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
+          // setInfiniteData through ternary condition between
+          // 'comments' : 'posts' instances of 'page'
           setInfiniteData(() =>
             resp.data.pages.flatMap((page) =>
               "comments" in page ? page.comments : page.posts
@@ -56,7 +57,8 @@ export const CreateReplyList = ({
   }, [flagToRefetch]);
   useEffect(() => {
     if (data && data.pages && data.pages[0]) {
-      // setInfiniteData of First Page through ternary condition between 'comments' : 'posts' instances of 'page'
+      // setInfiniteData of First Page through ternary condition between
+      // 'comments' : 'posts' instances of 'page'
       const firstPageOfQuery =
         "comments" in data.pages[0]
           ? data.pages[0].comments
@@ -65,7 +67,8 @@ export const CreateReplyList = ({
         setInfiniteData(firstPageOfQuery);
         setPage((page) => page + 1);
         if (!hasNextPage)
-          // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
+          // setInfiniteData through ternary condition between
+          // 'comments' : 'posts' instances of 'page'
           setInfiniteData(
             data?.pages.flatMap((page) => {
               return "comments" in page ? page.comments : page.posts;
@@ -73,7 +76,8 @@ export const CreateReplyList = ({
           );
       }
       if (!isRefetching) {
-        // setInfiniteData through ternary condition between 'comments' : 'posts' instances of 'page'
+        // setInfiniteData through ternary condition between
+        // 'comments' : 'posts' instances of 'page'
         setInfiniteData(
           data?.pages.flatMap((page) => {
             return "comments" in page ? page.comments : page.posts;
@@ -99,14 +103,15 @@ export const CreateReplyList = ({
       }
     };
   }, [page, isFetched]);
-  if (!data) return <div></div>;
+  if (!data) return <div />;
   const handeNextPage = () => {
     let fetchedData: CommentsWithPosts[] | Post[] | undefined = undefined;
     void fetchNextPage()
       .then((resp) => {
         const commentsOrPosts = resp.data?.pages[page];
         if (resp.isSuccess && commentsOrPosts) {
-          // set fetchedData through ternary condition between 'comments' : 'posts' instances of 'page'
+          // set fetchedData through ternary condition between
+          // 'comments' : 'posts' instances of 'page'
           fetchedData =
             "comments" in commentsOrPosts
               ? commentsOrPosts.comments
@@ -128,10 +133,7 @@ export const CreateReplyList = ({
   };
   return (
     <>
-      <section
-        id="scrollArea"
-        className={cn("border-gray-600", { ["border-t"]: !postId })}
-      >
+      <section className={cn("border-gray-600", { ["border-t"]: !postId })}>
         {/*Finally, based on presence of 'postId' value,
          CreateCommentView or CreatePostView will be created*/}
         {infiniteData.length > 0 &&
@@ -139,7 +141,6 @@ export const CreateReplyList = ({
             return "postId" in commentOrPost ? (
               <CreateCommentView
                 {...commentOrPost}
-                // {...{ profileImageUrl, username, authorId }}
                 setFlagToRefetch={setFlagToRefetch}
                 key={commentOrPost.id}
               />
@@ -154,7 +155,8 @@ export const CreateReplyList = ({
           })}
       </section>
       {hasNextPage && (
-        <div ref={elemRef} className="h-[1px] bg-transparent opacity-0"></div> // intersection trigger that fetches next page
+        // intersection trigger that fetches next page
+        <div ref={elemRef} className="h-[1px] bg-transparent opacity-0"></div>
       )}
     </>
   );

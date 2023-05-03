@@ -1,7 +1,7 @@
 import { SignIn } from "@clerk/nextjs";
 import type { FC, PropsWithChildren } from "react";
 
-import { SideMenu } from "~/components/SideMenu/SideMenu";
+import { SideMenu, SideMenuMobile } from "~/components/SideMenu/SideMenu";
 import cn from "classnames";
 
 // main bg-slate-200 on light-mode
@@ -16,6 +16,7 @@ export const MainLayout: FC<PropsWithChildren> = ({ children }) => {
         )}
       >
         {/* DARK THEME MANUAL TOGGLING IN SIDE MENU */}
+        <SideMenuMobile />
         <SideMenu />
         <div className=" mx-auto flex h-full min-h-screen w-full flex-col border-x border-gray-600 sm:w-1/2">
           {children}

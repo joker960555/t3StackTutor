@@ -65,7 +65,7 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
   if (!user || !user.username || !isSignedIn) {
     return (
       <div className="flex flex-col border-b border-gray-600 px-4 py-3">
-        <SignInPlate text={"Sign in to make a comment down below"} />
+        <SignInPlate text={"Sign in to leave a comment down below"} />
       </div>
     );
   }

@@ -61,7 +61,7 @@ export const PostForm = () => {
   );
   if (!user || !user.username || !isSignedIn) {
     return (
-      <div className="flex flex-col border-b border-gray-600 px-4 py-3">
+      <div className="hidden flex-col border-b border-gray-600 px-4 py-3 sm:flex">
         <SignInPlate text="Sign in to create a post" />
       </div>
     );

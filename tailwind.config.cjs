@@ -14,6 +14,7 @@ const config = {
       translate: {
         "4/5": "80%",
       },
+      screens: { "hover-hover": { raw: "(hover: hover)" } },
     },
   },
   plugins: [],
