@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { api, type RouterOutputs } from "~/utils/api";
 import { CreatePostView } from "~/components/createPostView/CreatePostView";
 import { CreateCommentView } from "~/components/createCommentView/CreateCommentView";
+import { LoadingList } from "../loading";
 import type { Post, Comment } from "@prisma/client";
 import {
   infinitePostsByUserId,
@@ -10,12 +11,13 @@ import {
 import cn from "classnames";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
-type CommentsWithPosts =
+type CommentsWithUserData =
   RouterOutputs["comments"]["getInfiniteComments"]["comments"][number];
 // in this component Comment or Post prisma schema is used for useInfiniteQuery
 // 'replies' fetching. Through ternary conditions and based on providing of
 // 'postId' property to CreateReplyList component, 'replies' data is defined as
-// an array of comments or posts and then is passed to CreatePostView component
+// an array of comments or posts and then is passed to
+// CreatePostView | CreateCommentView component
 export const CreateReplyList = ({
   authorId,
   profileImageUrl,
@@ -25,13 +27,21 @@ export const CreateReplyList = ({
   const [page, setPage] = useState(0);
   const [flagToRefetch, setFlagToRefetch] = useState<boolean>(false);
   const elemRef = useRef(null);
+  const ctx = api.useContext();
   // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE FETCHED | INFINITE('POSTS') OTHERWISE
-  const { data, hasNextPage, fetchNextPage, isFetched, refetch, isRefetching } =
-    postId
-      ? infiniteCommentsByPostId({ postId })
-      : infinitePostsByUserId({ authorId });
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetched,
+    refetch,
+    isRefetching,
+    isLoading,
+  } = postId
+    ? infiniteCommentsByPostId({ postId })
+    : infinitePostsByUserId({ authorId });
   const [infiniteData, setInfiniteData] = useState<
-    [] | Post[] | CommentsWithPosts[]
+    [] | Post[] | CommentsWithUserData[]
   >([]);
   useEffect(() => {
     // IF postId IS PROVIDED, INFINITE('COMMENTS') WILL BE
@@ -86,7 +96,6 @@ export const CreateReplyList = ({
       }
     }
   }, [data, hasNextPage, isRefetching]);
-  const ctx = api.useContext();
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       const firstEntry = entries[0];
@@ -103,9 +112,10 @@ export const CreateReplyList = ({
       }
     };
   }, [page, isFetched]);
+  if (isLoading) return <LoadingList />;
   if (!data) return <div />;
   const handeNextPage = () => {
-    let fetchedData: CommentsWithPosts[] | Post[] | undefined = undefined;
+    let fetchedData: CommentsWithUserData[] | Post[] | undefined = undefined;
     void fetchNextPage()
       .then((resp) => {
         const commentsOrPosts = resp.data?.pages[page];

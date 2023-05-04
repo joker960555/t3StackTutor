@@ -15,9 +15,13 @@ export const deletePostById = (
       // switch case to check the current page to chose invalidation method
       switch (lastPartOfCurrentURL) {
         case username:
-          if (setFlagToRefetch) setFlagToRefetch(true); // onDelete refetch useInfiniteQuery posts
+          // onDelete from profilePage refetch useInfiniteQuery posts
+          if (setFlagToRefetch) setFlagToRefetch(true);
           break;
-
+        case "":
+          // onDelete from mainPage refetch useInfiniteQuery posts
+          if (setFlagToRefetch) setFlagToRefetch(true);
+          break;
         default:
           void ctx.posts.getAll.invalidate();
           break;

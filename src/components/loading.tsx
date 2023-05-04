@@ -24,6 +24,14 @@ export const CreateLoadingSpinner = (props: { size?: number }) => {
   );
 };
 
+export const LoadingList = () => {
+  return (
+    <div className=" mx-auto mt-14">
+      <CreateLoadingSpinner />
+    </div>
+  );
+};
+
 export const LoadingPage = () => {
   return (
     <div className="absolute top-0 left-0 flex h-screen w-screen items-center justify-center">

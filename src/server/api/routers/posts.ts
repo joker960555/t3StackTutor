@@ -69,6 +69,30 @@ export const postsRouter = createTRPCRouter({
       });
       return post;
     }),
+  getAllInfinitePosts: publicProcedure
+    .input(
+      z.object({
+        cursor: z.string().nullish(),
+        limit: z.number().min(20).max(100),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit } = input;
+      const posts = await ctx.prisma.post.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: { createdAt: "desc" },
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextItem = posts.pop();
+        nextCursor = nextItem?.id;
+      }
+      // If !comments in DB to bind userData to, return [] to the client
+      const postsWithUserData =
+        posts.length > 0 ? await bindUserDataToPosts(posts) : [];
+      return { posts: postsWithUserData, nextCursor };
+    }),
   getInfinitePostsByUserId: publicProcedure
     .input(
       z.object({

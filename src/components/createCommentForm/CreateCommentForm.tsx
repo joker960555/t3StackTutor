@@ -40,7 +40,6 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
   const { mutate: createCommentReq, isLoading: isPosting } =
     api.comments.createComment.useMutation({
       onSuccess: () => {
-        void ctx.comments.getAll.invalidate();
         void ctx.comments.getInfiniteComments.invalidate();
         setValue("");
       },

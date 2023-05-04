@@ -38,7 +38,7 @@ export const PostForm = () => {
   const { mutate: createPostReq, isLoading: isPosting } =
     api.posts.create.useMutation({
       onSuccess: () => {
-        void ctx.posts.getAll.invalidate();
+        void ctx.posts.getAllInfinitePosts.invalidate();
         setValue("");
       },
       onError: (e) => {
