@@ -68,6 +68,7 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
       </div>
     );
   }
+  console.log("value", value, value.length);
   return (
     <div className="flex flex-col border-b border-gray-600 px-4 pb-3 pt-1">
       <div className="my-2 ml-16 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-lg font-extralight text-transparent">
@@ -125,7 +126,7 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
             <button
               type="submit"
               className={cn(
-                "text:neutral-800 rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 hover:text-neutral-900 disabled:opacity-60 disabled:hover:bg-blue-500"
+                "rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 disabled:bg-blue-500 disabled:opacity-60 "
               )}
               disabled={isPosting || !value}
             >

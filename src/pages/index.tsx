@@ -7,6 +7,7 @@ import { api, type RouterOutputs } from "~/utils/api";
 import { LoadingPage } from "~/components/loading";
 import { PostForm } from "~/components/createPostForm/CreatePostForm";
 import { CreatePostView } from "~/components/createPostView/CreatePostView";
+import { infiniteAllPosts } from "~/server/api/helpers/infiniteQueries";
 
 dayjs.extend(relativeTime);
 
@@ -27,14 +28,7 @@ const Feed = () => {
     refetch,
     isRefetching,
     isLoading,
-  } = api.posts.getAllInfinitePosts.useInfiniteQuery(
-    { limit: 20 },
-    {
-      getNextPageParam: (lastPage) => lastPage?.nextCursor,
-      refetchInterval: 5000,
-      refetchOnMount: true,
-    }
-  );
+  } = infiniteAllPosts();
   useEffect(() => {
     if (flagToRefetch === true) {
       void ctx.posts.getInfinitePostsByUserId.invalidate();

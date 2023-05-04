@@ -2,6 +2,18 @@ import { api, type RouterOutputs } from "~/utils/api";
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
 import type { Comment } from "@prisma/client";
 
+export const infiniteAllPosts = () => {
+  const limit = 20;
+  return api.posts.getAllInfinitePosts.useInfiniteQuery(
+    { limit },
+    {
+      getNextPageParam: (lastPage) => lastPage?.nextCursor,
+      refetchInterval: 5000,
+      refetchOnMount: true,
+    }
+  );
+};
+
 export const infinitePostsByUserId = ({
   authorId,
 }: Pick<userProfileType, "authorId">) => {

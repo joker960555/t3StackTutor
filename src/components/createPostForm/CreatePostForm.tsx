@@ -121,7 +121,7 @@ export const PostForm = () => {
             <button
               type="submit"
               className={cn(
-                "rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 disabled:opacity-60 disabled:hover:bg-blue-500"
+                "rounded-full border border-blue-500 bg-blue-500 px-8 py-1 transition-colors hover:bg-blue-600 disabled:bg-blue-500 disabled:opacity-60"
               )}
               disabled={isPosting || !value}
             >
