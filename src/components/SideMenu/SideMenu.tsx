@@ -33,7 +33,7 @@ export const SideMenu = () => {
       <div className="flex w-4/5 flex-col gap-2">
         <div
           className={cn(
-            "h-1/2 rounded-lg bg-slate-700 transition-all hover:bg-slate-800 dark:bg-slate-600 dark:hover:bg-slate-700"
+            " h-15 rounded-lg bg-slate-700 transition-all hover:bg-slate-800 dark:bg-slate-600 dark:hover:bg-slate-700"
           )}
         >
           {!isSignedIn && <SignInSideButton />}
@@ -42,7 +42,7 @@ export const SideMenu = () => {
         </div>
         <div
           className={cn(
-            "h-1/2 rounded-lg bg-zinc-700 transition-all hover:bg-zinc-800 dark:hover:bg-zinc-600"
+            "h-15 rounded-lg bg-zinc-700 transition-all hover:bg-zinc-800 dark:hover:bg-zinc-600"
           )}
         >
           <ThemeToggler sideMenuToggler={true} />
@@ -62,7 +62,7 @@ export const SideMenuMobile = () => {
       <div className=" fixed top-0 z-50 flex h-10 w-full justify-between bg-gradient-to-r from-blue-800 to-blue-900 py-2 px-4 text-slate-200 sm:hidden">
         Typesparks
         <div className="grow"></div>
-        <div className="flex gap-4">
+        <div className="flex gap-6">
           {!isSignedIn && <SignInSideButton />}
           {!!isSignedIn && <SignOutSideButton />}
           <ThemeToggler />

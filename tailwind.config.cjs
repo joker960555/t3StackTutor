@@ -4,6 +4,9 @@ const config = {
   darkMode: ["class"],
   theme: {
     extend: {
+      height: {
+        15: "3.75rem",
+      },
       outlineWidth: {
         5: "5px",
         6: "6px",
