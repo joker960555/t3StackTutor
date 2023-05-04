@@ -58,7 +58,8 @@ export const SideMenuMobile = () => {
 
   return (
     <>
-      <div className="block h-10 bg-current sm:hidden"></div>
+      <div className="block h-10 bg-gradient-to-r from-blue-800 to-blue-900 sm:hidden"></div>
+      {/* fixed to screen mobile menu and menuPlaceholder on top corner */}
       <div className=" fixed top-0 z-50 flex h-10 w-full justify-between bg-gradient-to-r from-blue-800 to-blue-900 py-2 px-4 text-slate-200 sm:hidden">
         Typesparks
         <div className="grow"></div>
