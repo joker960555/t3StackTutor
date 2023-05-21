@@ -8,22 +8,21 @@ import dayjs from "dayjs";
 dayjs.extend(relativeTime);
 import { CreatePostView } from "~/components/createPostView/CreatePostView";
 import { CommentForm } from "~/components/createCommentForm/CreateCommentForm";
-import { CreateReplyList } from "~/components/createReplyList/CreateReplyList";
-import { LoadingPage } from "~/components/loading";
+// import { CreateReplyList } from "~/components/createReplyList/CreateReplyList";
+import { CreateCommentList } from "~/components/createReplyList/CreateCommentList";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
 const PostPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = api.posts.getUniquePostById.useQuery({ id });
-  const { theme, systemTheme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState<boolean>(false);
   useEffect(() => {
     setMounted(true);
   }, []);
   if (!data) return <div />;
   if (!mounted) return null;
-  // const { data: comments } = api.comments.getAll.useQuery({ postId: data.id });
   const { username, content, profileImageUrl, authorId } = data;
   const userData: userProfileType = { authorId, profileImageUrl, username };
   const postId = data.id;
@@ -66,7 +65,7 @@ const PostPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <CreatePostView {...data} />
       <CommentForm postId={data.id} />
       {/* LIST OF COMMENTS */}
-      <CreateReplyList {...userData} postId={postId} />
+      <CreateCommentList {...userData} postId={postId} />
     </>
   );
 };

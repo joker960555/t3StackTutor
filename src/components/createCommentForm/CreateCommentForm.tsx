@@ -68,7 +68,6 @@ export const CommentForm = ({ postId }: Pick<CommentType, "postId">) => {
       </div>
     );
   }
-  console.log("value", value, value.length);
   return (
     <div className="flex flex-col border-b border-gray-600 px-4 pb-3 pt-1">
       <div className="my-2 ml-16 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-lg font-extralight text-transparent">

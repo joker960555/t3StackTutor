@@ -17,6 +17,8 @@ model Post {
     content String @db.VarChar(255)
     authorId String
     comments Comment[]
+    likes PostLike[]
+    likeCount Int @default(0)
 
     @@index([authorId])
 } 
@@ -27,9 +29,43 @@ model Comment {
 
   content String @db.VarChar(255)
   authorId String
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String 
+  likes CommentLike[]
+  likeCount Int @default(0)
 
   @@index([postId])
   @@index([authorId])
+}
+
+model PostLike {
+  createdAt DateTime @default(now())
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  
+  @@id([userId, postId])
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model CommentLike {
+  createdAt  DateTime @default(now())
+  userId     String
+  comment    Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId  String
+  
+  @@id([userId, commentId])
+  @@unique([userId, commentId])
+  @@index([commentId])
+} 
+
+model Follow {
+  createdAt DateTime @default(now())
+  userId String
+  targetUserId String
+
+  @@id([userId, targetUserId])
+  @@unique([userId, targetUserId])
+  @@index([userId, targetUserId])
 }

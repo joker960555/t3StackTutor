@@ -5,17 +5,6 @@ import { rateLimitHelper } from "~/server/api/helpers/rateLimitHelper";
 import { bindUserDataToComments } from "../helpers/bindUserDataToReplies";
 
 export const commentsRouter = createTRPCRouter({
-  getAll: publicProcedure
-    .input(z.object({ postId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const { postId } = input;
-      const comments = await ctx.prisma.comment.findMany({
-        take: 100,
-        where: { postId },
-        orderBy: [{ createdAt: "desc" }],
-      });
-      return bindUserDataToComments(comments);
-    }),
   createComment: privateProcedure
     .input(
       z.object({
@@ -49,16 +38,23 @@ export const commentsRouter = createTRPCRouter({
       z.object({
         postId: z.string(),
         cursor: z.string().nullish(),
-        limit: z.number().min(1).max(50),
+        limit: z.number().min(1).max(50).optional().default(40),
       })
     )
     .query(async ({ ctx, input }) => {
       const { postId, cursor, limit } = input;
+      const currentUserId = ctx.userId;
       const comments = await ctx.prisma.comment.findMany({
         where: { postId },
         cursor: cursor ? { id: cursor } : undefined,
         take: limit + 1,
         orderBy: [{ createdAt: "desc" }],
+        include: {
+          likes:
+            currentUserId === null
+              ? false
+              : { where: { userId: currentUserId } },
+        },
       });
       let nextCursor: typeof cursor | undefined = undefined;
       if (comments.length > limit) {
@@ -68,7 +64,15 @@ export const commentsRouter = createTRPCRouter({
       // If !comments in DB to bind userData to, return [] to the client
       const commentsWithUserData =
         comments.length > 0 ? await bindUserDataToComments(comments) : [];
-      return { comments: commentsWithUserData, nextCursor };
+      return {
+        comments: commentsWithUserData.map((comment) => {
+          return {
+            ...comment,
+            likedByMe: comment.likes?.length > 0,
+          };
+        }),
+        nextCursor,
+      };
     }),
   removeUniqueCommentById: privateProcedure
     .input(z.object({ id: z.string(), authorId: z.string() }))

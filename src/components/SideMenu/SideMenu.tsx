@@ -9,6 +9,7 @@ import {
 } from "~/components/SignInComponents/SignInComponents";
 export const SideMenu = () => {
   const { isSignedIn } = useUser();
+
   const [active, setActive] = useState(false);
 
   return (

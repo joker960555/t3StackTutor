@@ -1,24 +1,13 @@
-import { api, type RouterOutputs } from "~/utils/api";
-type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
+import { api } from "~/utils/api";
 import type { Comment } from "@prisma/client";
 
-export const infiniteAllPosts = () => {
-  const limit = 20;
-  return api.posts.getAllInfinitePosts.useInfiniteQuery(
-    { limit },
-    {
-      getNextPageParam: (lastPage) => lastPage?.nextCursor,
-      refetchInterval: 5000,
-      refetchOnMount: true,
-    }
-  );
-};
-
-export const infinitePostsByUserId = ({
+export const getAllInfinitePostsOrByUserId = ({
   authorId,
-}: Pick<userProfileType, "authorId">) => {
-  const limit = 10;
-  return api.posts.getInfinitePostsByUserId.useInfiniteQuery(
+}: {
+  authorId?: string | undefined;
+}) => {
+  const limit = 20;
+  return api.posts.getAllInfinitePostsOrByUserId.useInfiniteQuery(
     {
       authorId,
       limit,
@@ -34,7 +23,7 @@ export const infinitePostsByUserId = ({
 export const infiniteCommentsByPostId = ({
   postId,
 }: Pick<Comment, "postId">) => {
-  const limit = 10;
+  const limit = 15;
   return api.comments.getInfiniteComments.useInfiniteQuery(
     {
       postId,

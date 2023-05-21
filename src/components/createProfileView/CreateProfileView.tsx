@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type RouterOutputs } from "~/utils/api";
-import { CreateReplyList } from "../createReplyList/CreateReplyList";
+import { CreatePostList } from "~/components/createReplyList/CreatePostList";
 import cn from "classnames";
 
 type userProfileType = RouterOutputs["profile"]["getProfileByUserName"];
@@ -49,7 +49,7 @@ export const CreateProfileView = (props: { data: userProfileType }) => {
         <div className="h-24"></div>
         <span className="text-lg font-semibold leading-6">{username}</span>
       </section>
-      <CreateReplyList {...data} /> {/* LIST OF POSTS */}
+      <CreatePostList {...data} /> {/* LIST OF POSTS */}
     </>
   );
 };

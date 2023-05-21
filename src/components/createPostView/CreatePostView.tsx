@@ -6,11 +6,12 @@ import cn from "classnames";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 dayjs.extend(relativeTime);
-type userWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
+type userWithPostType =
+  RouterOutputs["posts"]["getAllInfinitePostsOrByUserId"]["posts"][number];
 import { DotsSVG } from "public/svgs";
+import { LikePostComponent } from "~/components/likeComponent/LikeComponent";
 import { ReplyOptionsMenu } from "../replyOptionsMenu/ReplyOptionsMenu";
 import { checkForLongWord } from "~/server/api/helpers/checkForLongWord";
-
 export const CreatePostView = (
   props: userWithPostType & {
     setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
@@ -26,6 +27,7 @@ export const CreatePostView = (
   } = props;
   const [openOptions, setOpenOptions] = useState(false);
   const [direction, setDirection] = useState<"toBottom" | "toTop">("toBottom");
+
   const toggleOptionsMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
     const currentFontSize = parseFloat(
@@ -67,6 +69,9 @@ export const CreatePostView = (
                 {dayjs(createdAt).fromNow()}
               </span>
             </Link>
+            <div className="self-center pl-1">
+              <LikePostComponent {...props} />
+            </div>
           </div>
           <div
             onClick={(e) => toggleOptionsMenu(e)}

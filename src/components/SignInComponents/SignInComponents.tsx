@@ -1,5 +1,6 @@
+import { api } from "~/utils/api";
 import { useEffect, useState } from "react";
-import { SignInButton, SignOutButton } from "@clerk/nextjs";
+import { SignInButton, SignOutButton, useSession } from "@clerk/nextjs";
 import cn from "classnames";
 
 export const SignInSideButton = () => {
@@ -18,9 +19,18 @@ export const SignInSideButton = () => {
 
 export const SignOutSideButton = () => {
   const [mounted, setMounted] = useState<boolean>(false);
+  const ctx = api.useContext();
+  const session = useSession();
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (session == null) {
+      console.log(session);
+      void ctx.invalidate();
+    }
+  }, [session]);
   if (!mounted) return null;
   return (
     <SignOutButton>

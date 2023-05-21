@@ -1,3 +1,4 @@
+import cn from "classnames";
 export const CreateLoadingSpinner = (props: { size?: number }) => {
   return (
     <div role="status">
@@ -28,6 +29,14 @@ export const LoadingList = () => {
   return (
     <div className=" mx-auto mt-14">
       <CreateLoadingSpinner />
+    </div>
+  );
+};
+
+export const LoadingPlate = ({ size = 28 }: { size?: number }) => {
+  return (
+    <div className={cn(`mt-2 flex justify-center h-[${size}px] w-[${size}px]`)}>
+      <CreateLoadingSpinner size={size} />
     </div>
   );
 };

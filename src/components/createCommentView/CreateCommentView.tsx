@@ -9,7 +9,9 @@ dayjs.extend(relativeTime);
 import { DotsSVG } from "public/svgs";
 import { ReplyOptionsMenu } from "../replyOptionsMenu/ReplyOptionsMenu";
 import { checkForLongWord } from "~/server/api/helpers/checkForLongWord";
-type userWithCommentType = RouterOutputs["comments"]["getAll"][number];
+import { LikeCommentComponent } from "../likeComponent/LikeComponent";
+type userWithCommentType =
+  RouterOutputs["comments"]["getInfiniteComments"]["comments"][number];
 
 // in comment component all Links refers to profile page
 export const CreateCommentView = (
@@ -17,14 +19,8 @@ export const CreateCommentView = (
     setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
   }
 ) => {
-  const {
-    username,
-    profileImageUrl,
-    id,
-    content,
-    createdAt,
-    setFlagToRefetch,
-  } = props;
+  const { username, profileImageUrl, content, createdAt, setFlagToRefetch } =
+    props;
   const [openOptions, setOpenOptions] = useState(false);
   const [direction, setDirection] = useState<"toBottom" | "toTop">("toBottom");
   const toggleOptionsMenu = (e: React.MouseEvent) => {
@@ -64,6 +60,9 @@ export const CreateCommentView = (
                 {dayjs(createdAt).fromNow()}
               </span>
             </Link>
+            <div className="self-center pl-1">
+              <LikeCommentComponent {...props} />
+            </div>
           </div>
           <div
             onClick={(e) => toggleOptionsMenu(e)}

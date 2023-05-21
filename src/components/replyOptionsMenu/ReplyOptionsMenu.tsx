@@ -11,22 +11,24 @@ import cn from "classnames";
 import { TrashSVG } from "public/svgs/index";
 import { useSession } from "@clerk/nextjs";
 
-type UserWithPostType = RouterOutputs["posts"]["getPostsByUserId"][number];
+type UserWithPostType =
+  RouterOutputs["posts"]["getAllInfinitePostsOrByUserId"]["posts"][number];
+type UserWithCommentType =
+  RouterOutputs["comments"]["getInfiniteComments"]["comments"][number];
 
 export const ReplyOptionsMenu = ({
   // size of the menu 18rem, used to calculate the position of the menu in CreatePostView component
   direction,
   userWithPostOrCommentData,
-  setFlagToRefetch,
 }: {
   direction: "toTop" | "toBottom";
-  userWithPostOrCommentData: UserWithPostType &
+  userWithPostOrCommentData: (UserWithPostType | UserWithCommentType) &
     Partial<Pick<Comment, "postId">>;
   setFlagToRefetch?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { isSignedIn, session } = useSession();
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  const { id, authorId, username, postId } = userWithPostOrCommentData;
+  const { id, authorId, postId } = userWithPostOrCommentData;
   const lastPartOfCurrentURL = window.location.href.split("/").pop()!;
   useEffect(() => {
     if (isSignedIn) {
@@ -36,9 +38,7 @@ export const ReplyOptionsMenu = ({
     }
   }, []); // Disables menu Button if authorID not belongs to session.user
   // if postId is provided, deleteCommentById, otherwise deletePostById
-  const { mutate } = postId
-    ? deleteCommentById(setFlagToRefetch)
-    : deletePostById(setFlagToRefetch, lastPartOfCurrentURL, username);
+  const { mutate } = postId ? deleteCommentById() : deletePostById();
   const conditionOnRedirectToHomePageBeforeDelete = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {

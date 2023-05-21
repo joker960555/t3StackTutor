@@ -2,7 +2,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { filterUserForClient } from "~/server/api/helpers/filterUserForClient";
 import { TRPCError } from "@trpc/server";
 
-import type { Post, Comment } from "@prisma/client";
+import type { Post, Comment, PostLike, CommentLike } from "@prisma/client";
 
 const fetchUserData = async (userId: string[] | undefined, limit: number) => {
   return (
@@ -13,7 +13,9 @@ const fetchUserData = async (userId: string[] | undefined, limit: number) => {
   ).map(filterUserForClient);
 };
 
-export const bindUserDataToComments = async (comments: Comment[]) => {
+export const bindUserDataToComments = async (
+  comments: (Comment & { likes: CommentLike[] })[]
+) => {
   const userIdArr = comments.map((comment) => comment.authorId);
   const users = await fetchUserData(userIdArr, 100);
 
@@ -36,7 +38,11 @@ export const bindUserDataToComments = async (comments: Comment[]) => {
   return userWithComments;
 };
 
-export const bindUserDataToPosts = async (posts: Post[]) => {
+export const bindUserDataToPosts = async (
+  posts: (Post & {
+    likes: PostLike[];
+  })[]
+) => {
   const userIdArr = posts.map((post) => post.authorId);
   const users = await fetchUserData(userIdArr, 100);
 
